@@ -106,8 +106,10 @@ INCLUDE_DIRECTORIES(
 # If you want to add the shader_program.cc class and utils.cc, simply do
 # SET(SRC_FILES shader_program.cc utils.cc)
 SET(SRC_FILES)
+FILE(GLOB_RECURSE SOURCES sources/*.cc sources/*.h)
+SOURCE_GROUP("" FILES ${SOURCES})
 
-ADD_EXECUTABLE(draw_scene draw_scene.cc ${SRC_FILES})
+ADD_EXECUTABLE(draw_scene draw_scene.cc ${SRC_FILES} ${SOURCES})
 TARGET_LINK_LIBRARIES(draw_scene
   glfw
   ${OPENGL_LIBRARIES}
