@@ -35,7 +35,120 @@
 
 // TODO: Include the headers you need for your project.
 
-int main(int argc, char** argv) {
-  // TODO: Implement the logic here to draw your scene.
-  return 0;
+#include <iostream>
+#include <string>
+
+
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
+
+#include "sources/camera_utils.h"
+#include "sources/transformations.cc"
+
+// Window dimensions.
+constexpr int kWindowWidth = 640;
+constexpr int kWindowHeight = 480;
+
+static void ErrorCallback(int error, const char* description)
+{
+	std::cerr << "ERROR: " << description << std::endl;
+}
+
+static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) 
+{
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) 
+	{
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	}
+ }
+ 
+ void SetWindowHints() 
+ {
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+}
+
+void ConfigureViewPort(GLFWwindow* window)
+{
+	int width;
+	int height;
+	glfwGetFramebufferSize(window, &width, &height);
+	glViewport(0, 0, width, height);
+}
+
+void ClearTheFrameBuffer() 
+{
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+int main(int argc, char** argv) 
+{
+	if (!glfwInit()) 
+	{
+		return -1;
+	}
+
+	glfwSetErrorCallback(ErrorCallback);
+
+	SetWindowHints();
+
+	const std::string window_name = "CS 470 Final Project";
+	GLFWwindow* window = glfwCreateWindow(kWindowWidth, kWindowHeight, window_name.c_str(), nullptr, nullptr);
+  
+	if (!window) 
+	{
+		glfwTerminate();
+		return -1;
+	}
+
+	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
+	glfwSetKeyCallback(window, KeyCallback);
+
+	glewExperimental = GL_TRUE;
+	if (glewInit() != GLEW_OK) 
+	{
+		std::cerr << "Glew did not initialize properly!" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+
+	ConfigureViewPort(window);
+
+	const float field_of_view = wvu::ConvertDegreesToRadians(45.0f);
+	const float aspect_ratio = static_cast<float>(kWindowWidth / kWindowHeight);
+	const float near_plane = 0.1f;
+	const float far_plane = 10.0f;
+	const Eigen::Matrix4f& projection = wvu::ComputePerspectiveProjectionMatrix(field_of_view, aspect_ratio, near_plane, far_plane);
+	//const Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
+
+	//constexpr static GLfloat rotSpeed = 35.0;
+	//const Eigen::Vector3f rotAxis(0.0f, 1.0f, 0.0f);
+  
+	while (!glfwWindowShouldClose(window)) 
+	{
+
+		// Render the scene!
+		
+
+		// Swap front and back buffers.
+		glfwSwapBuffers(window);
+
+		// Poll for and process events.
+		glfwPollEvents();
+	}
+
+	// Destroy window.
+	glfwDestroyWindow(window);
+	// Tear down GLFW library.
+	glfwTerminate();
+
+	return 0;
 }
