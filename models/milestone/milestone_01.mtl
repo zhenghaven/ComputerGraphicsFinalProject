@@ -1,0 +1,5 @@
+# Blender MTL File: 'Earth.blend'
+# Material Count: 1
+
+newmtl Earth_MATERIAL
+map_Kd Milestone_01_color_1K.jpg
