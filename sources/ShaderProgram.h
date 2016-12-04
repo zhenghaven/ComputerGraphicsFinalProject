@@ -14,11 +14,15 @@ public:
 	
 	~ShaderProgram();
 	
+	bool Use() const;
+	
 	const bool IsValid() const;
 	
 	const std::string GetErrorMessage() const;
 	
 	bool SetUniformIfExistMatrix4fv(const char * uniformName, const GLfloat * value);
+	
+	static bool ReadShaderStrFromFile(const char * filePath, std::string & outStr);
 	
 private:
 	ShaderProgram();

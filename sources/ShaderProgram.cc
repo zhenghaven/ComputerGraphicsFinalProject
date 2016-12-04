@@ -1,4 +1,9 @@
 
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+
 #include "ShaderProgram.h"
 
 enum ShaderType
@@ -84,6 +89,16 @@ ShaderProgram::~ShaderProgram()
 	}
 }
 
+bool ShaderProgram::Use() const 
+{
+	if (IsValid()) 
+	{
+		glUseProgram(m_shaderProgramID);
+		return true;
+	}
+	return false;
+}
+
 const bool ShaderProgram::IsValid() const
 {
 	return m_shaderProgramID != 0;
@@ -106,6 +121,20 @@ bool ShaderProgram::SetUniformIfExistMatrix4fv(const char * uniformName, const G
 	{
 		return false;
 	}
+}
+
+bool ShaderProgram::ReadShaderStrFromFile(const char * filePath, std::string & outStr)
+{
+	std::ifstream in(filePath);
+	if (!in.is_open())
+	{
+		return false;
+	}
+	std::stringstream string_buffer;
+	string_buffer << in.rdbuf();
+	in.close();
+	outStr = string_buffer.str();
+	return true;
 }
 
 ShaderProgram::ShaderProgram() : 

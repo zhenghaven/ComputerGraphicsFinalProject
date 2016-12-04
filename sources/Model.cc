@@ -17,7 +17,7 @@ static inline void SetVertexBufferObject(GLuint & vertex_buffer_object_id, const
 	glBufferData(GL_ARRAY_BUFFER, vertices_size_in_bytes, vertices.data(), GL_STATIC_DRAW);
 
 	GLuint kIndex = 0;
-	constexpr GLuint kNumElementsPerVertex = 8;
+	constexpr GLuint kNumElementsPerVertex = 5;
 	constexpr GLuint kStride = kNumElementsPerVertex * sizeof(vertices(0, 0));
 	const GLvoid* offset_ptr = nullptr;
 	glVertexAttribPointer(kIndex, 3, GL_FLOAT, GL_FALSE, kStride, offset_ptr);
@@ -25,11 +25,6 @@ static inline void SetVertexBufferObject(GLuint & vertex_buffer_object_id, const
 
 	kIndex = 1;
 	offset_ptr = reinterpret_cast<GLvoid*>(3 * sizeof(vertices(0, 0)));
-	glVertexAttribPointer(kIndex, 3, GL_FLOAT, GL_FALSE, kStride, offset_ptr);
-	glEnableVertexAttribArray(kIndex);
-
-	kIndex = 2;
-	offset_ptr = reinterpret_cast<GLvoid*>(6 * sizeof(vertices(0, 0)));
 	glVertexAttribPointer(kIndex, 2, GL_FLOAT, GL_FALSE, kStride, offset_ptr);
 	glEnableVertexAttribArray(kIndex);
 
@@ -62,6 +57,7 @@ static inline void SetVertexArrayObject(GLuint & vertex_array_object_id, GLuint 
 }
 
 Model::Model(const Eigen::MatrixXf& vertices) : 
+	m_relativeLoc(Eigen::Matrix4f::Identity()),
 	m_vertices(vertices),
 	vertex_buffer_object_id_(0),
 	vertex_array_object_id_(0),
@@ -71,6 +67,7 @@ Model::Model(const Eigen::MatrixXf& vertices) :
 }
 
 Model::Model(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices) : 
+	m_relativeLoc(Eigen::Matrix4f::Identity()),
 	m_vertices(vertices),
 	m_indices(indices),
 	vertex_buffer_object_id_(0),
@@ -87,6 +84,11 @@ Model::~Model()
 	glDeleteBuffers(1, &element_buffer_object_id_);
 }
 
+void Model::SetShaderProgram(ShaderProgram * shader)
+{
+	m_shader = shader;
+}
+
 void Model::SetOrientation(const Eigen::Vector3f& orientation) 
 {
 
@@ -94,13 +96,19 @@ void Model::SetOrientation(const Eigen::Vector3f& orientation)
 
 void Model::SetPosition(const Eigen::Vector3f& position) 
 {
-
+	if(position.hasNaN())
+	{
+		return;
+	}
+	m_relativeLoc.block(0, 3, 3, 1) = position;
 }
 
 void Model::Draw(const Eigen::Matrix4f& projection, const Eigen::Matrix4f& view) 
 {
+	if(!m_shader)
+		return;
 	//const Eigen::Matrix4f model = ComputeModelMatrix();
-	
+	m_shader->Use();
 	m_shader->SetUniformIfExistMatrix4fv("view", view.data());
 	m_shader->SetUniformIfExistMatrix4fv("projection", projection.data());
 	m_shader->SetUniformIfExistMatrix4fv("model", m_relativeLoc.data());

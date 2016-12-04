@@ -37,15 +37,29 @@
 
 #include <iostream>
 #include <string>
+#include <unistd.h>
 
 
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <gflags/gflags.h>
+#include <glog/logging.h>
+
+#ifdef GFLAGS_NAMESPACE_GOOGLE
+#define GLUTILS_GFLAGS_NAMESPACE google
+#else
+#define GLUTILS_GFLAGS_NAMESPACE gflags
+#endif
+
 
 #include "sources/camera_utils.h"
-#include "sources/transformations.cc"
+#include "sources/transformations.h"
+#include "sources/Model.h"
+#include "sources/ShaderProgram.h"
+
+DEFINE_string(workdir, "./", "The path to working directory.");
 
 // Window dimensions.
 constexpr int kWindowWidth = 640;
@@ -88,8 +102,58 @@ void ClearTheFrameBuffer()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+bool ConstructWorld(Model ** worldPtr)
+{
+	std::string tmpStr1, tmpStr2;
+	ShaderProgram::ReadShaderStrFromFile("shaders/vertex_shader.glsl", tmpStr1);
+	ShaderProgram::ReadShaderStrFromFile("shaders/fragment_shader.glsl", tmpStr2);
+	ShaderProgram * shader = new ShaderProgram(tmpStr1, tmpStr2);
+	
+	if(!shader->IsValid())
+	{
+		std::cout << shader->GetErrorMessage() << std::endl;
+		return false;
+	}
+	
+	Eigen::MatrixXf pyramidVertices(5, 5);
+	pyramidVertices.block(0, 0, 3, 1) = Eigen::Vector3f( 0.0f,  0.5f, 0.0f);
+	pyramidVertices.block(3, 0, 2, 1) = Eigen::Vector2f(0.5, 0);
+
+	pyramidVertices.block(0, 1, 3, 1) = Eigen::Vector3f(-0.5f, -0.5f, 0.5f);
+	pyramidVertices.block(3, 1, 2, 1) = Eigen::Vector2f(0, 1);
+
+	pyramidVertices.block(0, 2, 3, 1) = Eigen::Vector3f( 0.5f, -0.5f, 0.5f);
+	pyramidVertices.block(3, 2, 2, 1) = Eigen::Vector2f(1, 1);
+
+	pyramidVertices.block(0, 3, 3, 1) = Eigen::Vector3f( 0.5f, -0.5f, -0.5f);
+	pyramidVertices.block(3, 3, 2, 1) = Eigen::Vector2f(0, 1);
+
+	pyramidVertices.block(0, 4, 3, 1) = Eigen::Vector3f(-0.5f, -0.5f, -0.5f);
+	pyramidVertices.block(3, 4, 2, 1) = Eigen::Vector2f(1, 1);
+	std::vector<GLuint> pyramidIndices = 
+	{
+		0, 1, 2,
+		0, 2, 3,
+		0, 3, 4,
+		0, 4, 1,
+		1, 4, 3,
+		1, 3, 2
+	};
+	*worldPtr = new Model(pyramidVertices, pyramidIndices);
+	(*worldPtr)->SetShaderProgram(shader);
+	return true;
+}
+
 int main(int argc, char** argv) 
 {
+	GLUTILS_GFLAGS_NAMESPACE::ParseCommandLineFlags(&argc, &argv, true);
+	google::InitGoogleLogging(argv[0]);
+	
+	if(chdir(FLAGS_workdir.c_str()) != 0)
+	{
+		std::cerr << "Failed to change the working directory to: " << FLAGS_workdir << std::endl;
+	}
+	
 	if (!glfwInit()) 
 	{
 		return -1;
@@ -127,16 +191,27 @@ int main(int argc, char** argv)
 	const float near_plane = 0.1f;
 	const float far_plane = 10.0f;
 	const Eigen::Matrix4f& projection = wvu::ComputePerspectiveProjectionMatrix(field_of_view, aspect_ratio, near_plane, far_plane);
-	//const Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
+	const Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
 
 	//constexpr static GLfloat rotSpeed = 35.0;
 	//const Eigen::Vector3f rotAxis(0.0f, 1.0f, 0.0f);
-  
+	
+	Model * world = nullptr;
+	
+	if(!ConstructWorld(&world))
+	{
+		std::cerr << "Failed to construct the world!" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	
+	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, -3.0f));
+	
 	while (!glfwWindowShouldClose(window)) 
 	{
 
 		// Render the scene!
-		
+		world->Draw(projection, view);
 
 		// Swap front and back buffers.
 		glfwSwapBuffers(window);
