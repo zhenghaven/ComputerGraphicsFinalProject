@@ -5,6 +5,8 @@
 
 #include <vector>
 #include <Eigen/Core>
+
+#define GLEW_STATIC
 #include <GL/glew.h>
 
 namespace wvu
