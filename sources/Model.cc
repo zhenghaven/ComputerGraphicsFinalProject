@@ -58,7 +58,16 @@ static inline void SetVertexArrayObject(GLuint & vertex_array_object_id, GLuint 
 	glBindVertexArray(0);
 }
 
-Model::Model(const Eigen::MatrixXf& vertices) : 
+Model::Model() :
+	m_relativeLoc(Eigen::Matrix4f::Identity()),
+	vertex_buffer_object_id_(0),
+	vertex_array_object_id_(0),
+	element_buffer_object_id_(0)
+{
+
+}
+
+Model::Model(const Eigen::MatrixXf& vertices) :
 	m_relativeLoc(Eigen::Matrix4f::Identity()),
 	m_vertices(vertices),
 	vertex_buffer_object_id_(0),
@@ -68,7 +77,7 @@ Model::Model(const Eigen::MatrixXf& vertices) :
 	SetVertexArrayObject(vertex_array_object_id_, vertex_buffer_object_id_, element_buffer_object_id_, m_vertices, m_indices);
 }
 
-Model::Model(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices) : 
+Model::Model(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices) :
 	m_relativeLoc(Eigen::Matrix4f::Identity()),
 	m_vertices(vertices),
 	m_indices(indices),
@@ -91,12 +100,12 @@ void Model::SetShaderProgram(ShaderProgram * shader)
 	m_shader = shader;
 }
 
-void Model::SetOrientation(const Eigen::Vector3f& orientation) 
+void Model::SetOrientation(const Eigen::Vector3f& orientation)
 {
 
 }
 
-void Model::SetPosition(const Eigen::Vector3f& position) 
+void Model::SetPosition(const Eigen::Vector3f& position)
 {
 	if(position.hasNaN())
 	{
@@ -105,11 +114,11 @@ void Model::SetPosition(const Eigen::Vector3f& position)
 	m_relativeLoc.block(0, 3, 3, 1) = position;
 }
 
-void Model::Draw(const Eigen::Matrix4f& projection, const Eigen::Matrix4f& view) 
+void Model::Draw(const Eigen::Matrix4f& projection, const Eigen::Matrix4f& view)
 {
 	if(!m_shader)
 		return;
-		
+
 	//const Eigen::Matrix4f model = ComputeModelMatrix();
 	Eigen::Vector4f baseColor(1.0f, 0.0f, 0.0f, 1.0f);
 	m_shader->Use();
@@ -118,7 +127,7 @@ void Model::Draw(const Eigen::Matrix4f& projection, const Eigen::Matrix4f& view)
 	m_shader->SetUniformIfExistMatrix4fv("model", m_relativeLoc.data());
 	m_shader->SetUniformIfExist1f("u_useTexture", 0.0f);
 	m_shader->SetUniformIfExist4fv("u_baseColor", baseColor.data());
-	
+
 	if(m_vertices.size() > 0 && m_indices.size() == 0)
 	{
 		glBindVertexArray(vertex_array_object_id_);
@@ -132,4 +141,3 @@ void Model::Draw(const Eigen::Matrix4f& projection, const Eigen::Matrix4f& view)
 		glBindVertexArray(0);
 	}
 }
-

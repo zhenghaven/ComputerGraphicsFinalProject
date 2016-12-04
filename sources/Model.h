@@ -11,9 +11,11 @@
 
 class ShaderProgram;
 
-class Model 
+class Model
 {
 public:
+	Model();
+
 	Model(const Eigen::MatrixXf& vertices);
 
 	Model(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices);
@@ -37,7 +39,7 @@ public:
 	const std::vector<GLuint>& GetIndices() const;
 
 private:
-  
+
 	//Eigen::Vector3f orientation;
 
 	//Eigen::Vector3f position;
@@ -47,7 +49,7 @@ private:
 	Eigen::MatrixXf m_vertices;
 
 	std::vector<GLuint> m_indices;
-	
+
 	ShaderProgram * m_shader;
 
 

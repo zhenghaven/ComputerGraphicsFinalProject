@@ -9,32 +9,16 @@
 
 class Camera : public Model
 {
-  protected:
-    Eigen::Vector3f position;
-
-    Eigen::Vector3f orientation;
-
-    Eigen::Vector3f speed;
-
-    double movementSpeedFactor; // Controls how fast the camera moves
-
-    void initCamera();
-
 
   public:
 
-    // Holding any keys down?
-    bool holdingForward;
-    bool holdingBackward;
-    bool holdingLeftStrafe;
-    bool holdingRightStrafe;
 
     Camera();
 
     ~Camera();
 
     // Method to move the camera based on the current direction
-    void move(double deltaTime);
+    void update(double deltaTime);
 
     void SetShaderProgram(ShaderProgram * shader);
 
@@ -42,17 +26,27 @@ class Camera : public Model
 
     void SetOrientation(const Eigen::Vector3f & orientation);
 
+    const Eigen::Matrix4f GetPose() const;
+
     void SetPosition(const Eigen::Vector3f & position);
 
-    //const Eigen::Vector3f& GetOrientation() const;
+    void Translate(const Eigen::Vector3f & translation);
 
-    //const Eigen::Vector3f& GetPosition() const;
+    void Rotate(float yaw, float pitch);
 
     const Eigen::MatrixXf& GetVertices() const;
 
     const std::vector<GLuint>& GetIndices() const;
 
   private:
+
+    Eigen::Matrix4f position;
+
+    Eigen::Vector3f speed;
+
+    double movementSpeedFactor; // Controls how fast the camera moves
+
+    void initCamera();
 
 };
 

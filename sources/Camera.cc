@@ -1,5 +1,7 @@
 #include "Model.h"
 #include "Camera.h"
+#include "sources/camera_utils.h"
+#include "sources/transformations.h"
 
 #include <iostream>
 
@@ -20,60 +22,30 @@ Camera::~Camera()
 
 void Camera::initCamera()
 {
-	// Set position, rotation and speed values to zero
 
-
-	// How fast we move (higher values mean we move and strafe faster)
-	movementSpeedFactor = 100.0;
-
-	// To begin with, we aren't holding down any keys
-	holdingForward     = false;
-	holdingBackward    = false;
-	holdingLeftStrafe  = false;
-	holdingRightStrafe = false;
 }
 
-// Function to calculate which direction we need to move the camera and by what amount
-void Camera::move(double deltaTime)
+void Camera::update(double deltaTime)
 {
-	// Vector to break up our movement into components along the X, Y and Z axis
-	Eigen::Vector3f movement;
 
-	if (holdingForward)
-	{
-		//movement.addX(sinYRot * pitchLimitFactor);
-	//	movement.addY(-sinXRot);
-		//movement.addZ(-cosYRot * pitchLimitFactor);
-	}
+}
 
-	if (holdingBackward)
-	{
-		//movement.addX(-sinYRot * pitchLimitFactor);
-		//movement.addY(sinXRot);
-		//movement.addZ(cosYRot * pitchLimitFactor);
-	}
+void Camera::Translate(const Eigen::Vector3f & translation)
+{
+  position *= wvu::ComputeTranslationMatrix(translation);
+}
 
-	if (holdingLeftStrafe)
-	{
-		//movement.addX(-cosYRot);
-		//movement.addZ(-sinYRot);
-	}
+void Camera::Rotate(float yaw, float pitch)
+{
+  Eigen::Vector3f upUnitVector = position.block(0, 1, 3, 1);
+  position *= wvu::ComputeRotationMatrix(upUnitVector, wvu::ConvertDegreesToRadians(yaw));
 
-	if (holdingRightStrafe)
-	{
-		//movement.addX(cosYRot);
-		//movement.addZ(sinYRot);
-	}
+  Eigen::Vector3f horizontalUnitVector = Eigen::Vector3f(position.block(0, 0, 3, 1)) + Eigen::Vector3f(position.block(0, 2, 3, 1));
+  horizontalUnitVector.normalize();
+  position *= wvu::ComputeRotationMatrix(horizontalUnitVector, wvu::ConvertDegreesToRadians(pitch));
+}
 
-	// Normalise our movement vector
-//	movement.normalise();
-
-	// Calculate our value to keep the movement the same speed regardless of the framerate...
-	double framerateIndependentFactor = movementSpeedFactor * deltaTime;
-
-	// .. and then apply it to our movement vector.
-	//movement *= framerateIndependentFactor;
-
-	// Finally, apply the movement to our position
-	//position += movement;
+const Eigen::Matrix4f Camera::GetPose() const
+{
+  return position;
 }
