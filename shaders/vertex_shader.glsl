@@ -52,17 +52,19 @@ layout (location = 1) in vec2 passed_texel;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform float u_useTexture;
+uniform vec4 u_baseColor;
 
-// Passing variables from shader to shader.
-// out vec4 vertex_color;
 out vec2 texel;
+out float useTexture;
+out vec4 baseColor;
 
 void main() 
 {
 	// Compute MVP.
 	gl_Position = projection * view * model * vec4(position, 1.0f);
-	// This was an example on how to pass variables from shader to shader.
-	// vertex_color = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-	// vertex_color = vec4(passed_color, 1.0f);
+	
 	texel = passed_texel;
+	baseColor = u_baseColor;
+	useTexture = u_useTexture;
 }

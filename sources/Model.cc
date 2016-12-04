@@ -1,6 +1,8 @@
 
 #include "Model.h"
 
+#include <iostream>
+
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <GL/glew.h>
@@ -107,12 +109,16 @@ void Model::Draw(const Eigen::Matrix4f& projection, const Eigen::Matrix4f& view)
 {
 	if(!m_shader)
 		return;
+		
 	//const Eigen::Matrix4f model = ComputeModelMatrix();
+	Eigen::Vector4f baseColor(1.0f, 0.0f, 0.0f, 1.0f);
 	m_shader->Use();
 	m_shader->SetUniformIfExistMatrix4fv("view", view.data());
 	m_shader->SetUniformIfExistMatrix4fv("projection", projection.data());
 	m_shader->SetUniformIfExistMatrix4fv("model", m_relativeLoc.data());
-
+	m_shader->SetUniformIfExist1f("u_useTexture", 0.0f);
+	m_shader->SetUniformIfExist4fv("u_baseColor", baseColor.data());
+	
 	if(m_vertices.size() > 0 && m_indices.size() == 0)
 	{
 		glBindVertexArray(vertex_array_object_id_);

@@ -40,11 +40,9 @@
 
 #version 330 core
 
-// uniform vec4 vertex_color;
-// This was an example on how to pass variables from shader to shader.
-// in vec4 vertex_color;
-
 in vec2 texel;
+in float useTexture;
+in vec4 baseColor;
 
 out vec4 color;
 
@@ -52,6 +50,12 @@ uniform sampler2D texture_sampler;
 
 void main()
 {
-	color = vec4(0.0f, 1.0f, 1.0f, 1.0f);
-	//color = texture(texture_sampler, texel);
+	if(useTexture > 0.5)
+	{
+		color = texture(texture_sampler, texel);
+	}
+	else
+	{
+		color = baseColor;
+	}
 }

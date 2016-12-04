@@ -22,6 +22,10 @@ public:
 	
 	bool SetUniformIfExistMatrix4fv(const char * uniformName, const GLfloat * value);
 	
+	bool SetUniformIfExist1f(const char * uniformName, const GLfloat value);
+	
+	bool SetUniformIfExist4fv(const char * uniformName, const GLfloat * value);
+	
 	static bool ReadShaderStrFromFile(const char * filePath, std::string & outStr);
 	
 private:

@@ -123,6 +123,34 @@ bool ShaderProgram::SetUniformIfExistMatrix4fv(const char * uniformName, const G
 	}
 }
 
+bool ShaderProgram::SetUniformIfExist1f(const char * uniformName, const GLfloat value)
+{
+	const GLint location = glGetUniformLocation(m_shaderProgramID, uniformName);
+	if(location >= 0)
+	{
+		glUniform1f(location, value);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool ShaderProgram::SetUniformIfExist4fv(const char * uniformName, const GLfloat * value)
+{
+	const GLint location = glGetUniformLocation(m_shaderProgramID, uniformName);
+	if(location >= 0)
+	{
+		glUniform4fv(location, 1, value);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 bool ShaderProgram::ReadShaderStrFromFile(const char * filePath, std::string & outStr)
 {
 	std::ifstream in(filePath);
