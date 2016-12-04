@@ -115,7 +115,7 @@ bool ConstructWorld(Model ** worldPtr)
 		std::cout << shader->GetErrorMessage() << std::endl;
 		return false;
 	}
-	
+	/*
 	Eigen::MatrixXf pyramidVertices(5, 5);
 	pyramidVertices.block(0, 0, 3, 1) = Eigen::Vector3f( 0.0f,  0.5f, 0.0f);
 	pyramidVertices.block(3, 0, 2, 1) = Eigen::Vector2f(0.5, 0);
@@ -140,6 +140,11 @@ bool ConstructWorld(Model ** worldPtr)
 		1, 4, 3,
 		1, 3, 2
 	};
+	 */
+	std::string MTLPath;
+	Eigen::MatrixXf pyramidVertices;
+	std::vector<GLuint> pyramidIndices;
+	wvu::GetElementsFromOBJ("models/brick_wall_flat/wall.obj", MTLPath, pyramidVertices, pyramidIndices, true, false);
 	*worldPtr = new Model(pyramidVertices, pyramidIndices);
 	(*worldPtr)->SetShaderProgram(shader);
 	return true;
@@ -206,21 +211,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 	
-	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, -3.0f));
-	std::string outMtlLib;
-	std::vector<Eigen::Vector3f> outPoints;
-	std::vector<Eigen::Vector3f> outNormals;
-	std::vector<Eigen::Vector2f> outUVs;
-	std::vector<wvu::Face> outFaces;
-	wvu::ParseOBJFile("models/brick_wall_flat/wall.obj", outMtlLib, outPoints, outNormals, outUVs, outFaces);
-	for(int i = 0; i < outFaces.size(); ++i)
-	{
-		for(int j = 0; j < outFaces[i].verts.size(); ++j)
-		{
-			std::cout << outFaces[i].verts[j].indices[0] << "/" << outFaces[i].verts[j].indices[1] << "/" << outFaces[i].verts[j].indices[2] << " ";
-		}
-		std::cout << std::endl;
-	}
+	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, 0.0f));
 	
 	while (!glfwWindowShouldClose(window)) 
 	{
