@@ -1,0 +1,7 @@
+newmtl TextureMap
+Kd 1.000000 1.000000 1.000000
+Ns 100.000000
+d 1.000000
+map_Kd Diffuse.jpg
+map_Bump Bump.jpg
+map_Ks Spec.jpg
