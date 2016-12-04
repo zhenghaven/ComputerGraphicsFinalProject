@@ -58,6 +58,7 @@
 #include "sources/transformations.h"
 #include "sources/Model.h"
 #include "sources/ShaderProgram.h"
+#include "sources/ModelLoader.h"
 
 DEFINE_string(workdir, "./", "The path to working directory.");
 
@@ -206,6 +207,20 @@ int main(int argc, char** argv)
 	}
 	
 	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, -3.0f));
+	std::string outMtlLib;
+	std::vector<Eigen::Vector3f> outPoints;
+	std::vector<Eigen::Vector3f> outNormals;
+	std::vector<Eigen::Vector2f> outUVs;
+	std::vector<wvu::Face> outFaces;
+	wvu::ParseOBJFile("models/brick_wall_flat/wall.obj", outMtlLib, outPoints, outNormals, outUVs, outFaces);
+	for(int i = 0; i < outFaces.size(); ++i)
+	{
+		for(int j = 0; j < outFaces[i].verts.size(); ++j)
+		{
+			std::cout << outFaces[i].verts[j].indices[0] << "/" << outFaces[i].verts[j].indices[1] << "/" << outFaces[i].verts[j].indices[2] << " ";
+		}
+		std::cout << std::endl;
+	}
 	
 	while (!glfwWindowShouldClose(window)) 
 	{
