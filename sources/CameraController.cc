@@ -58,12 +58,15 @@ void CameraController::update(float deltaTime)
 	offset += direction * step * GetMultiplier(moveLeft, moveRight, speed);
 	offset += direction * step * GetMultiplier(moveUp, moveDown, speed);
 
-
+	if(camera)
+	{
+	camera->Translate(offset);
+	}
+	
   double xpos, ypos;
   glfwGetCursorPos(window, &xpos, &ypos);
 
-  //horizontalAngle += mouseSpeed * deltaTime * float(1024/2 - xpos );
-  //verticalAngle   += mouseSpeed * deltaTime * float( 768/2 - ypos );
+
 
 
 }

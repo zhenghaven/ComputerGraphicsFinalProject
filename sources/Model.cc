@@ -11,6 +11,7 @@
 #include "Material.h"
 #include "ModelLoader.h"
 #include "MaterialLoader.h"
+#include "Camera.h"
 
 
 static inline void SetVertexBufferObject(GLuint & vertex_buffer_object_id, const Eigen::MatrixXf & vertices)
@@ -134,15 +135,15 @@ void Model::SetPosition(const Eigen::Vector3f& position)
 	m_relativeLoc.block(0, 3, 3, 1) = position;
 }
 
-void Model::Draw(const Eigen::Matrix4f& projection, const Eigen::Matrix4f& view)
+void Model::Draw(const Camera * camera)
 {
-	if(!m_shader || !m_material)
+	if(!m_shader || !m_material || !camera)
 		return;
 
 	//const Eigen::Matrix4f model = ComputeModelMatrix();
 	m_shader->Use();
-	m_shader->SetUniformIfExistMatrix4fv("view", view.data());
-	m_shader->SetUniformIfExistMatrix4fv("projection", projection.data());
+	m_shader->SetUniformIfExistMatrix4fv("view", camera->GetPose().data());
+	m_shader->SetUniformIfExistMatrix4fv("projection", camera->GetProjection().data());
 	m_shader->SetUniformIfExistMatrix4fv("model", m_relativeLoc.data());
 
 	m_material->BindMaterial(m_shader);

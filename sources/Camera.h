@@ -13,7 +13,7 @@ class Camera : public Model
   public:
 
 
-    Camera();
+    Camera(Eigen::Matrix4f projection);
 
     ~Camera();
 
@@ -32,6 +32,8 @@ class Camera : public Model
 
     const Eigen::Matrix4f GetPose() const;
 
+    const Eigen::Matrix4f GetProjection() const;
+
     void SetPosition(const Eigen::Vector3f & position);
 
     void Translate(const Eigen::Vector3f & translation);
@@ -43,12 +45,15 @@ class Camera : public Model
     const std::vector<GLuint>& GetIndices() const;
 
   private:
+    Camera();
 
     Eigen::Matrix4f position;
 
-    Eigen::Vector3f speed;
+    Eigen::Matrix4f m_projection;
 
-    double movementSpeedFactor; // Controls how fast the camera moves
+//    Eigen::Vector3f speed;
+
+//    double movementSpeedFactor; // Controls how fast the camera moves
 
     void initCamera();
 

@@ -11,6 +11,7 @@
 
 class ShaderProgram;
 class Material;
+class Camera;
 
 class Model
 {
@@ -29,7 +30,7 @@ public:
 
 	void SetMaterial(Material * material);
 
-	void Draw(const Eigen::Matrix4f& projection, const Eigen::Matrix4f& view);
+	void Draw(const Camera * camera);
 
 	void SetOrientation(const Eigen::Vector3f & orientation);
 

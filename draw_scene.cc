@@ -211,7 +211,7 @@ int main(int argc, char** argv)
 
 	//constexpr static GLfloat rotSpeed = 35.0;
 	//const Eigen::Vector3f rotAxis(0.0f, 1.0f, 0.0f);
-	Camera* camera = new Camera();
+	Camera* camera = new Camera(projection);
 	CameraController* cameraController = new CameraController(window, camera);
 
 
@@ -237,7 +237,7 @@ int main(int argc, char** argv)
 
 		cameraController->update(deltaTime);
 		// Render the scene!
-		world->Draw(projection, view);
+		world->Draw(camera);
 
 		// Swap front and back buffers.
 		glfwSwapBuffers(window);

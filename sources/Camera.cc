@@ -9,7 +9,9 @@
 #include <Eigen/Geometry>
 #include <GL/glew.h>
 
-Camera::Camera()
+Camera::Camera(Eigen::Matrix4f projection) :
+	position(Eigen::Matrix4f::Identity()),
+	m_projection(projection)
 {
 	initCamera();
 }
@@ -48,6 +50,11 @@ void Camera::Rotate(float yaw, float pitch)
 const Eigen::Matrix4f Camera::GetPose() const
 {
   return position;
+}
+
+const Eigen::Matrix4f Camera::GetProjection() const
+{
+  return m_projection;
 }
 
 const Eigen::Vector3f Camera::GetUpVector() const
