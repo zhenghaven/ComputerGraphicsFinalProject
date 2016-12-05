@@ -26,6 +26,10 @@ class Camera : public Model
 
     void SetOrientation(const Eigen::Vector3f & orientation);
 
+    const Eigen::Vector3f GetLookDirection() const;
+
+    const Eigen::Vector3f GetUpVector() const;
+
     const Eigen::Matrix4f GetPose() const;
 
     void SetPosition(const Eigen::Vector3f & position);

@@ -55,6 +55,8 @@
 
 
 #include "sources/camera_utils.h"
+#include "sources/Camera.h"
+#include "sources/CameraController.h"
 #include "sources/transformations.h"
 #include "sources/Model.h"
 #include "sources/ShaderProgram.h"
@@ -71,15 +73,15 @@ static void ErrorCallback(int error, const char* description)
 	std::cerr << "ERROR: " << description << std::endl;
 }
 
-static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) 
+static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) 
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
  }
- 
- void SetWindowHints() 
+
+ void SetWindowHints()
  {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -96,7 +98,7 @@ void ConfigureViewPort(GLFWwindow* window)
 	glViewport(0, 0, width, height);
 }
 
-void ClearTheFrameBuffer() 
+void ClearTheFrameBuffer()
 {
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -109,7 +111,7 @@ bool ConstructWorld(Model ** worldPtr)
 	ShaderProgram::ReadShaderStrFromFile("shaders/vertex_shader.glsl", tmpStr1);
 	ShaderProgram::ReadShaderStrFromFile("shaders/fragment_shader.glsl", tmpStr2);
 	ShaderProgram * shader = new ShaderProgram(tmpStr1, tmpStr2);
-	
+
 	if(!shader->IsValid())
 	{
 		std::cout << shader->GetErrorMessage() << std::endl;
@@ -131,7 +133,7 @@ bool ConstructWorld(Model ** worldPtr)
 
 	pyramidVertices.block(0, 4, 3, 1) = Eigen::Vector3f(-0.5f, -0.5f, -0.5f);
 	pyramidVertices.block(3, 4, 2, 1) = Eigen::Vector2f(1, 1);
-	std::vector<GLuint> pyramidIndices = 
+	std::vector<GLuint> pyramidIndices =
 	{
 		0, 1, 2,
 		0, 2, 3,
@@ -150,17 +152,17 @@ bool ConstructWorld(Model ** worldPtr)
 	return true;
 }
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
 	GLUTILS_GFLAGS_NAMESPACE::ParseCommandLineFlags(&argc, &argv, true);
 	google::InitGoogleLogging(argv[0]);
-	
+
 	if(chdir(FLAGS_workdir.c_str()) != 0)
 	{
 		std::cerr << "Failed to change the working directory to: " << FLAGS_workdir << std::endl;
 	}
-	
-	if (!glfwInit()) 
+
+	if (!glfwInit())
 	{
 		return -1;
 	}
@@ -171,8 +173,8 @@ int main(int argc, char** argv)
 
 	const std::string window_name = "CS 470 Final Project";
 	GLFWwindow* window = glfwCreateWindow(kWindowWidth, kWindowHeight, window_name.c_str(), nullptr, nullptr);
-  
-	if (!window) 
+
+	if (!window)
 	{
 		glfwTerminate();
 		return -1;
@@ -183,7 +185,7 @@ int main(int argc, char** argv)
 	glfwSetKeyCallback(window, KeyCallback);
 
 	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK) 
+	if (glewInit() != GLEW_OK)
 	{
 		std::cerr << "Glew did not initialize properly!" << std::endl;
 		glfwTerminate();
@@ -201,21 +203,31 @@ int main(int argc, char** argv)
 
 	//constexpr static GLfloat rotSpeed = 35.0;
 	//const Eigen::Vector3f rotAxis(0.0f, 1.0f, 0.0f);
-	
+	Camera* camera = new Camera();
+	CameraController* cameraController = new CameraController(window, camera);
+
+
 	Model * world = nullptr;
-	
+
 	if(!ConstructWorld(&world))
 	{
 		std::cerr << "Failed to construct the world!" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
-	
+
 	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, 0.0f));
-	
-	while (!glfwWindowShouldClose(window)) 
+
+	double lastFrame = 0;
+
+	while (!glfwWindowShouldClose(window))
 	{
 
+		double currentFrame = glfwGetTime();
+		float deltaTime = static_cast<float>(currentFrame - lastFrame);
+		lastFrame = currentFrame;
+
+		cameraController->update(deltaTime);
 		// Render the scene!
 		world->Draw(projection, view);
 

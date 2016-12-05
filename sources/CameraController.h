@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "Camera.h"
 
 #include <vector>
 #include <Eigen/Core>
@@ -9,11 +10,24 @@
 class CameraController
 {
 public:
-  CameraController(GLFWwindow* glwindow);
+  CameraController(GLFWwindow* glwindow, Camera* cam);
 
   ~CameraController();
-private:
+
   void update(float deltaTime);
+private:
+  float speed = 20.0;
+
+  bool moveForward = false;
+  bool moveBackward = false;
+  bool moveRight = false;
+  bool moveLeft = false;
+  bool moveUp = false;
+  bool moveDown = false;
 
   GLFWwindow* window;
+
+  Camera* camera;
+
+  float GetMultiplier(bool add, bool substruct, float scale = 0.0f);
 };

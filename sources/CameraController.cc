@@ -7,9 +7,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-CameraController::CameraController(GLFWwindow* glwindow)
+CameraController::CameraController(GLFWwindow* glwindow, Camera* cam)
 {
 	window = glwindow;
+  camera = cam;
 }
 
 CameraController::~CameraController()
@@ -18,33 +19,51 @@ CameraController::~CameraController()
 	// were declared on the stack.
 }
 
+float CameraController::GetMultiplier(bool add, bool substruct, float scale)
+{
+	float result = 0.0f;
+	if (add)
+	{
+		result += 1.0f;
+	}
+	if (substruct)
+	{
+		result -= 1.0f;
+	}
+	result += scale;
+	return result;
+}
 
 void CameraController::update(float deltaTime)
 {
 
-  //int xpos, ypos;
-  //glfwGetMousePos(&xpos, &ypos);
-  //glfwSetMousePos(1024/2, 768/2);
+  moveForward = (glfwGetKey(window, GLFW_KEY_W ) == GLFW_PRESS);
+  moveBackward = (glfwGetKey(window, GLFW_KEY_S ) == GLFW_PRESS);
+  moveRight = (glfwGetKey(window, GLFW_KEY_D ) == GLFW_PRESS);
+  moveLeft = (glfwGetKey(window, GLFW_KEY_A ) == GLFW_PRESS);
+	moveUp = (glfwGetKey(window, GLFW_KEY_Q ) == GLFW_PRESS);
+	moveDown = (glfwGetKey(window, GLFW_KEY_R ) == GLFW_PRESS);
+
+  Eigen::Vector3f direction = camera->GetLookDirection();
+  Eigen::Vector3f offset;
+
+  Eigen::Vector3f xVector = camera->GetUpVector().cross(direction);
+  xVector.normalize();
+
+  Eigen::Vector3f zVecttor = camera->GetUpVector();
+
+  float step = speed * deltaTime;
+
+  offset += direction * step * GetMultiplier(moveForward, moveBackward, speed);
+	offset += direction * step * GetMultiplier(moveLeft, moveRight, speed);
+	offset += direction * step * GetMultiplier(moveUp, moveDown, speed);
+
+
+  double xpos, ypos;
+  glfwGetCursorPos(window, &xpos, &ypos);
+
   //horizontalAngle += mouseSpeed * deltaTime * float(1024/2 - xpos );
   //verticalAngle   += mouseSpeed * deltaTime * float( 768/2 - ypos );
-  //Move forward
-  if (glfwGetKey(window, GLFW_KEY_UP ) == GLFW_PRESS){
-    //position += direction * deltaTime * speed;
-    std::cout << "up" << "\n";
-  }
-  // Move backward
-  if (glfwGetKey(window, GLFW_KEY_DOWN ) == GLFW_PRESS){
-    //position -= direction * deltaTime * speed;
-    std::cout << "down" << "\n";
-  }
-  // Strafe right
-  if (glfwGetKey(window, GLFW_KEY_RIGHT ) == GLFW_PRESS){
-    //position += right * deltaTime * speed;
-    std::cout << "right" << "\n";
-  }
-  // Strafe left
-  if (glfwGetKey(window, GLFW_KEY_LEFT ) == GLFW_PRESS){
-    //position -= right * deltaTime * speed;
-    std::cout << "left" << "\n";
-  }
+
+
 }

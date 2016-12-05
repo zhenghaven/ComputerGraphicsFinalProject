@@ -49,3 +49,17 @@ const Eigen::Matrix4f Camera::GetPose() const
 {
   return position;
 }
+
+const Eigen::Vector3f Camera::GetUpVector() const
+{
+  Eigen::Vector3f upUnitVector = position.block(0, 1, 3, 1);
+  return upUnitVector;
+}
+
+const Eigen::Vector3f Camera::GetLookDirection() const
+{
+  Eigen::Vector3f direction = Eigen::Vector3f(position.block(0, 0, 3, 1)) - Eigen::Vector3f(position.block(0, 2, 3, 1)) + Eigen::Vector3f(position.block(0, 1, 3, 1));
+  direction.normalize();
+
+  return direction;
+}
