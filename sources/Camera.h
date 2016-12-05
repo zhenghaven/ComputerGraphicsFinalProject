@@ -20,40 +20,12 @@ class Camera : public Model
     // Method to move the camera based on the current direction
     void update(double deltaTime);
 
-    void SetShaderProgram(ShaderProgram * shader);
-
-    void Draw(const Eigen::Matrix4f& projection, const Eigen::Matrix4f& view);
-
-    void SetOrientation(const Eigen::Vector3f & orientation);
-
-    const Eigen::Vector3f GetLookDirection() const;
-
-    const Eigen::Vector3f GetUpVector() const;
-
-    const Eigen::Matrix4f GetPose() const;
-
     const Eigen::Matrix4f GetProjection() const;
-
-    void SetPosition(const Eigen::Vector3f & position);
-
-    void Translate(const Eigen::Vector3f & translation);
-
-    void Rotate(float yaw, float pitch);
-
-    const Eigen::MatrixXf& GetVertices() const;
-
-    const std::vector<GLuint>& GetIndices() const;
 
   private:
     Camera();
 
-    Eigen::Matrix4f position;
-
     Eigen::Matrix4f m_projection;
-
-//    Eigen::Vector3f speed;
-
-//    double movementSpeedFactor; // Controls how fast the camera moves
 
     void initCamera();
 

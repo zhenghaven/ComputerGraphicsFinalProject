@@ -12,6 +12,7 @@
 #include "ModelLoader.h"
 #include "MaterialLoader.h"
 #include "Camera.h"
+#include "transformations.h"
 
 
 static inline void SetVertexBufferObject(GLuint & vertex_buffer_object_id, const Eigen::MatrixXf & vertices)
@@ -63,7 +64,7 @@ static inline void SetVertexArrayObject(GLuint & vertex_array_object_id, GLuint 
 }
 
 Model::Model() :
-	m_relativeLoc(Eigen::Matrix4f::Identity()),
+	m_relativePose(Eigen::Matrix4f::Identity()),
 	vertex_buffer_object_id_(0),
 	vertex_array_object_id_(0),
 	element_buffer_object_id_(0),
@@ -74,7 +75,7 @@ Model::Model() :
 }
 
 Model::Model(const Eigen::MatrixXf& vertices) :
-	m_relativeLoc(Eigen::Matrix4f::Identity()),
+	m_relativePose(Eigen::Matrix4f::Identity()),
 	m_vertices(vertices),
 	vertex_buffer_object_id_(0),
 	vertex_array_object_id_(0),
@@ -86,7 +87,7 @@ Model::Model(const Eigen::MatrixXf& vertices) :
 }
 
 Model::Model(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices) :
-	m_relativeLoc(Eigen::Matrix4f::Identity()),
+	m_relativePose(Eigen::Matrix4f::Identity()),
 	m_vertices(vertices),
 	m_indices(indices),
 	vertex_buffer_object_id_(0),
@@ -138,7 +139,7 @@ void Model::SetPosition(const Eigen::Vector3f& position)
 	{
 		return;
 	}
-	m_relativeLoc.block(0, 3, 3, 1) = position;
+	m_relativePose.block(0, 3, 3, 1) = position;
 }
 
 void Model::Draw(const Camera * camera)
@@ -150,7 +151,7 @@ void Model::Draw(const Camera * camera)
 	m_shader->Use();
 	m_shader->SetUniformIfExistMatrix4fv("view", camera->GetPose().data());
 	m_shader->SetUniformIfExistMatrix4fv("projection", camera->GetProjection().data());
-	m_shader->SetUniformIfExistMatrix4fv("model", m_relativeLoc.data());
+	m_shader->SetUniformIfExistMatrix4fv("model", m_relativePose.data());
 
 	m_material->BindMaterial(m_shader);
 	if(m_vertices.size() > 0 && m_indices.size() == 0)
@@ -169,7 +170,7 @@ void Model::Draw(const Camera * camera)
 }
 
 Model::Model(const std::string &parentPath, const std::string &OBJfileName) :
-		m_relativeLoc(Eigen::Matrix4f::Identity()),
+		m_relativePose(Eigen::Matrix4f::Identity()),
 		vertex_buffer_object_id_(0),
 		vertex_array_object_id_(0),
 		element_buffer_object_id_(0),
@@ -187,4 +188,47 @@ Model::Model(const std::string &parentPath, const std::string &OBJfileName) :
 	SetVertexArrayObject(vertex_array_object_id_, vertex_buffer_object_id_, element_buffer_object_id_, m_vertices, m_indices);
 	Material * mat = new Material(materials[0], parentPath);
 	m_material = mat;
+}
+
+void Model::Translate(const Eigen::Vector3f & translation)
+{
+	m_relativePose *= wvu::ComputeTranslationMatrix(translation);
+}
+
+const Eigen::Vector3f Model::GetUpVector() const
+{
+	Eigen::Vector3f upUnitVector = m_relativePose.block(0, 1, 3, 1);
+	return upUnitVector;
+}
+
+const Eigen::Vector3f Model::GetLookDirection() const
+{
+	Eigen::Vector3f direction = Eigen::Vector3f(m_relativePose.block(0, 0, 3, 1)) - Eigen::Vector3f(m_relativePose.block(0, 2, 3, 1)) + Eigen::Vector3f(m_relativePose.block(0, 1, 3, 1));
+	direction.normalize();
+
+	return direction;
+}
+
+const Eigen::Matrix4f Model::GetPose() const
+{
+	return m_relativePose;
+}
+
+void Model::Rotate(float yaw, float pitch, float roll)
+{
+	Eigen::Matrix3f m;
+	m = Eigen::AngleAxisf(wvu::ConvertDegreesToRadians(yaw), Eigen::Vector3f::UnitY())
+		* Eigen::AngleAxisf(wvu::ConvertDegreesToRadians(pitch), Eigen::Vector3f::UnitX())
+		* Eigen::AngleAxisf(wvu::ConvertDegreesToRadians(roll), Eigen::Vector3f::UnitZ());
+/*
+	Eigen::Vector3f upUnitVector = position.block(0, 1, 3, 1);
+	position *= wvu::ComputeRotationMatrix(upUnitVector, wvu::ConvertDegreesToRadians(yaw));
+
+	Eigen::Vector3f horizontalUnitVector = Eigen::Vector3f(position.block(0, 0, 3, 1)) + Eigen::Vector3f(position.block(0, 2, 3, 1));
+	horizontalUnitVector.normalize();
+	position *= wvu::ComputeRotationMatrix(horizontalUnitVector, wvu::ConvertDegreesToRadians(pitch));
+ */
+	Eigen::Matrix4f transform;
+	transform.block(0, 0, 3, 3) = m;
+	m_relativePose *= transform;
 }

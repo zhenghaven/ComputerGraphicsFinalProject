@@ -44,13 +44,26 @@ public:
 
 	const std::vector<GLuint>& GetIndices() const;
 
+	void Translate(const Eigen::Vector3f & translation);
+
+	const Eigen::Vector3f GetUpVector() const;
+
+	const Eigen::Matrix4f GetPose() const;
+
+	const Eigen::Vector3f GetLookDirection() const;
+
+	void Rotate(float yaw, float pitch, float roll);
+
+protected:
+
+	Eigen::Matrix4f m_relativePose;
+
+
 private:
 
 	//Eigen::Vector3f orientation;
 
 	//Eigen::Vector3f position;
-
-	Eigen::Matrix4f m_relativeLoc;
 
 	Eigen::MatrixXf m_vertices;
 

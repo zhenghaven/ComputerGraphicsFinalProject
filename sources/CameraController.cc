@@ -61,10 +61,10 @@ void CameraController::update(float deltaTime)
 	offset += direction * step * GetMultiplier(moveLeft, moveRight, speed);
 	offset += direction * step * GetMultiplier(moveUp, moveDown, speed);
 	
-	//offset = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
+	//offset = Eigen::Vector3f(0.0f, 0.0f, -1.0f);
 	if(camera)
 	{
-		camera->Translate(offset);
+		//camera->Translate(offset);
 	}
 
 	double xpos, ypos;

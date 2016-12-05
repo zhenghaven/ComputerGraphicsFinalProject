@@ -67,8 +67,8 @@
 DEFINE_string(workdir, "./", "The path to working directory.");
 
 // Window dimensions.
-constexpr int kWindowWidth = 640;
-constexpr int kWindowHeight = 480;
+constexpr int kWindowWidth = 1280;
+constexpr int kWindowHeight = 720;
 
 static void ErrorCallback(int error, const char* description)
 {
@@ -205,7 +205,7 @@ int main(int argc, char** argv)
 	const float field_of_view = wvu::ConvertDegreesToRadians(45.0f);
 	const float aspect_ratio = static_cast<float>(kWindowWidth / kWindowHeight);
 	const float near_plane = 0.1f;
-	const float far_plane = 10000.0f;
+	const float far_plane = 1000.0f;
 	const Eigen::Matrix4f& projection = wvu::ComputePerspectiveProjectionMatrix(field_of_view, aspect_ratio, near_plane, far_plane);
 	const Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
 
@@ -226,10 +226,14 @@ int main(int argc, char** argv)
 
 	double lastFrame = 0;
 
-	world->SetPosition(Eigen::Vector3f(10.0f, 0.0f, -200.0f));
+	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, -250.0f));
+	world->Rotate(90.0f, 0.0f, 0.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
+		ClearTheFrameBuffer();
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		double currentFrame = glfwGetTime();
 		float deltaTime = static_cast<float>(currentFrame - lastFrame);
