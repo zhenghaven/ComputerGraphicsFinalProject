@@ -64,7 +64,8 @@ GLuint CreateShaderProgram(const GLuint vertexShaderID, const GLuint fragmentSha
 		return ProgramID;
 }
   
-ShaderProgram::ShaderProgram(const std::string & vertexShaderStr, const std::string & fragmentShaderStr)
+ShaderProgram::ShaderProgram(const std::string & vertexShaderStr, const std::string & fragmentShaderStr) :
+		m_shaderProgramID(0)
 {
 	GLuint vertexShaderID = CompileShader(vertexShaderStr, ShaderType::Vertex, m_errorMsg);
 	

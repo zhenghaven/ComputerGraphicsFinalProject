@@ -47,7 +47,10 @@ namespace wvu
 	Eigen::Matrix4f ComputeTranslationMatrix(const Eigen::Vector3f& offset) 
 	{
 		Eigen::Matrix4f transformation = Eigen::Matrix4f::Identity();
-		transformation.col(3) = offset.homogeneous();
+		if(offset.norm() > 0.0f)
+		{
+			transformation.col(3) = offset.homogeneous();
+		}
 		return transformation;
 	}
 

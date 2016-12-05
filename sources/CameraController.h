@@ -1,11 +1,11 @@
-#include "Model.h"
-#include "Camera.h"
 
 #include <vector>
 #include <Eigen/Core>
 #include <GL/glew.h>
 
 #include <GLFW/glfw3.h>
+
+class Camera;
 
 class CameraController
 {
@@ -16,6 +16,8 @@ public:
 
   void update(float deltaTime);
 private:
+  CameraController();
+  
   float speed = 20.0;
 
   bool moveForward = false;

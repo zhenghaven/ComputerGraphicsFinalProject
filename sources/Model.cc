@@ -66,7 +66,9 @@ Model::Model() :
 	m_relativeLoc(Eigen::Matrix4f::Identity()),
 	vertex_buffer_object_id_(0),
 	vertex_array_object_id_(0),
-	element_buffer_object_id_(0)
+	element_buffer_object_id_(0),
+	m_shader(nullptr),
+	m_material(nullptr)
 {
 
 }
@@ -76,7 +78,9 @@ Model::Model(const Eigen::MatrixXf& vertices) :
 	m_vertices(vertices),
 	vertex_buffer_object_id_(0),
 	vertex_array_object_id_(0),
-	element_buffer_object_id_(0)
+	element_buffer_object_id_(0),
+	m_shader(nullptr),
+	m_material(nullptr)
 {
 	SetVertexArrayObject(vertex_array_object_id_, vertex_buffer_object_id_, element_buffer_object_id_, m_vertices, m_indices);
 }
@@ -87,7 +91,9 @@ Model::Model(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices
 	m_indices(indices),
 	vertex_buffer_object_id_(0),
 	vertex_array_object_id_(0),
-	element_buffer_object_id_(0)
+	element_buffer_object_id_(0),
+	m_shader(nullptr),
+	m_material(nullptr)
 {
 	SetVertexArrayObject(vertex_array_object_id_, vertex_buffer_object_id_, element_buffer_object_id_, m_vertices, m_indices);
 }
@@ -166,7 +172,9 @@ Model::Model(const std::string &parentPath, const std::string &OBJfileName) :
 		m_relativeLoc(Eigen::Matrix4f::Identity()),
 		vertex_buffer_object_id_(0),
 		vertex_array_object_id_(0),
-		element_buffer_object_id_(0)
+		element_buffer_object_id_(0),
+		m_shader(nullptr),
+		m_material(nullptr)
 {
 	std::string MTLPath;
 	Eigen::MatrixXf Vertices;
