@@ -59,6 +59,8 @@
 #include "sources/Model.h"
 #include "sources/ShaderProgram.h"
 #include "sources/ModelLoader.h"
+#include "sources/Material.h"
+#include "sources/MaterialLoader.h"
 
 DEFINE_string(workdir, "./", "The path to working directory.");
 
@@ -115,7 +117,7 @@ bool ConstructWorld(Model ** worldPtr)
 		std::cout << shader->GetErrorMessage() << std::endl;
 		return false;
 	}
-	/*
+/*
 	Eigen::MatrixXf pyramidVertices(5, 5);
 	pyramidVertices.block(0, 0, 3, 1) = Eigen::Vector3f( 0.0f,  0.5f, 0.0f);
 	pyramidVertices.block(3, 0, 2, 1) = Eigen::Vector2f(0.5, 0);
@@ -140,12 +142,18 @@ bool ConstructWorld(Model ** worldPtr)
 		1, 4, 3,
 		1, 3, 2
 	};
-	 */
+
+	Material * mat = new Material();
 	std::string MTLPath;
 	Eigen::MatrixXf pyramidVertices;
 	std::vector<GLuint> pyramidIndices;
 	wvu::GetElementsFromOBJ("models/brick_wall_flat/wall.obj", MTLPath, pyramidVertices, pyramidIndices, true, false);
-	*worldPtr = new Model(pyramidVertices, pyramidIndices);
+	std::vector<wvu::MLTMaterial> materials;
+	wvu::ParseMTL("models/brick_wall_flat/", MTLPath, materials);
+	Material * mat = new Material(materials[0], "models/brick_wall_flat/");
+	*/
+
+	*worldPtr = new Model("models/brick_wall_flat/", "wall.obj");
 	(*worldPtr)->SetShaderProgram(shader);
 	return true;
 }
@@ -195,7 +203,7 @@ int main(int argc, char** argv)
 	const float field_of_view = wvu::ConvertDegreesToRadians(45.0f);
 	const float aspect_ratio = static_cast<float>(kWindowWidth / kWindowHeight);
 	const float near_plane = 0.1f;
-	const float far_plane = 10.0f;
+	const float far_plane = 10000.0f;
 	const Eigen::Matrix4f& projection = wvu::ComputePerspectiveProjectionMatrix(field_of_view, aspect_ratio, near_plane, far_plane);
 	const Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
 
@@ -211,7 +219,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 	
-	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, 0.0f));
+	world->SetPosition(Eigen::Vector3f(10.0f, 0.0f, -200.0f));
 	
 	while (!glfwWindowShouldClose(window)) 
 	{

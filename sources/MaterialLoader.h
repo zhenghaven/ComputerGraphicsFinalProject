@@ -34,6 +34,8 @@ namespace wvu
 	};
 	
 	bool ParseMTL(const std::string & ParentPath, const std::string & fileName, std::vector<struct MLTMaterial> & outMaterials);
+	
+	bool IsFileExist(const std::string & filePath);
 }
 
 #endif
