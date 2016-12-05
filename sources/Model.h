@@ -10,19 +10,27 @@
 //#include "ShaderProgram.h"
 
 class ShaderProgram;
+class Material;
+class Camera;
 
-class Model 
+class Model
 {
 public:
+	Model();
+
 	Model(const Eigen::MatrixXf& vertices);
 
 	Model(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices);
+
+	Model(const std::string & parentPath, const std::string & OBJfileName);
 
 	~Model();
 
 	void SetShaderProgram(ShaderProgram * shader);
 
-	void Draw(const Eigen::Matrix4f& projection, const Eigen::Matrix4f& view);
+	void SetMaterial(Material * material);
+
+	void Draw(const Camera * camera);
 
 	void SetOrientation(const Eigen::Vector3f & orientation);
 
@@ -36,19 +44,34 @@ public:
 
 	const std::vector<GLuint>& GetIndices() const;
 
+	void Translate(const Eigen::Vector3f & translation);
+
+	const Eigen::Vector3f GetUpVector() const;
+
+	const Eigen::Matrix4f GetPose() const;
+
+	const Eigen::Vector3f GetLookDirection() const;
+
+	void Rotate(float yaw, float pitch, float roll);
+
+protected:
+
+	Eigen::Matrix4f m_relativePose;
+
+
 private:
-  
+
 	//Eigen::Vector3f orientation;
 
 	//Eigen::Vector3f position;
 
-	Eigen::Matrix4f m_relativeLoc;
-
 	Eigen::MatrixXf m_vertices;
 
 	std::vector<GLuint> m_indices;
-	
+
 	ShaderProgram * m_shader;
+
+	Material * m_material;
 
 
 	GLuint vertex_buffer_object_id_;

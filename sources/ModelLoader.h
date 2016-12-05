@@ -6,6 +6,9 @@
 #include <vector>
 #include <Eigen/Core>
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 namespace wvu
 {
 
@@ -61,7 +64,9 @@ namespace wvu
 
 	bool ParseOBJFile(const std::string & filePath, std::string & outMtlLib, std::vector<Eigen::Vector3f> & outPoints, std::vector<Eigen::Vector3f> & outNormals, std::vector<Eigen::Vector2f> & outUVs, std::vector<struct Face> & outFaces);
 
+	void ToSingleIndices(const std::vector<Eigen::Vector3f> & inPoints, const std::vector<Eigen::Vector3f> & inNormals, const std::vector<Eigen::Vector2f> & inUVs, const std::vector<struct Face> & inFaces, Eigen::MatrixXf & outVertices, std::vector<GLuint> & outIndices, bool inIgnoreNormal, bool inIgnoreUV);
 
+	bool GetElementsFromOBJ(const std::string & filePath, std::string & outMtlLib, Eigen::MatrixXf & outVertices, std::vector<GLuint> & outIndices, bool inIgnoreNormal, bool inIgnoreUV);
 }
 
 #endif

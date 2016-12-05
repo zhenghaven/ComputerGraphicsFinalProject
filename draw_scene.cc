@@ -55,31 +55,35 @@
 
 
 #include "sources/camera_utils.h"
+#include "sources/Camera.h"
+#include "sources/CameraController.h"
 #include "sources/transformations.h"
 #include "sources/Model.h"
 #include "sources/ShaderProgram.h"
 #include "sources/ModelLoader.h"
+#include "sources/Material.h"
+#include "sources/MaterialLoader.h"
 
 DEFINE_string(workdir, "./", "The path to working directory.");
 
 // Window dimensions.
-constexpr int kWindowWidth = 640;
-constexpr int kWindowHeight = 480;
+constexpr int kWindowWidth = 1280;
+constexpr int kWindowHeight = 720;
 
 static void ErrorCallback(int error, const char* description)
 {
 	std::cerr << "ERROR: " << description << std::endl;
 }
 
-static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) 
+static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) 
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
  }
- 
- void SetWindowHints() 
+
+ void SetWindowHints()
  {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -96,7 +100,7 @@ void ConfigureViewPort(GLFWwindow* window)
 	glViewport(0, 0, width, height);
 }
 
-void ClearTheFrameBuffer() 
+void ClearTheFrameBuffer()
 {
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -109,13 +113,13 @@ bool ConstructWorld(Model ** worldPtr)
 	ShaderProgram::ReadShaderStrFromFile("shaders/vertex_shader.glsl", tmpStr1);
 	ShaderProgram::ReadShaderStrFromFile("shaders/fragment_shader.glsl", tmpStr2);
 	ShaderProgram * shader = new ShaderProgram(tmpStr1, tmpStr2);
-	
+
 	if(!shader->IsValid())
 	{
 		std::cout << shader->GetErrorMessage() << std::endl;
 		return false;
 	}
-	
+/*
 	Eigen::MatrixXf pyramidVertices(5, 5);
 	pyramidVertices.block(0, 0, 3, 1) = Eigen::Vector3f( 0.0f,  0.5f, 0.0f);
 	pyramidVertices.block(3, 0, 2, 1) = Eigen::Vector2f(0.5, 0);
@@ -131,7 +135,7 @@ bool ConstructWorld(Model ** worldPtr)
 
 	pyramidVertices.block(0, 4, 3, 1) = Eigen::Vector3f(-0.5f, -0.5f, -0.5f);
 	pyramidVertices.block(3, 4, 2, 1) = Eigen::Vector2f(1, 1);
-	std::vector<GLuint> pyramidIndices = 
+	std::vector<GLuint> pyramidIndices =
 	{
 		0, 1, 2,
 		0, 2, 3,
@@ -140,22 +144,33 @@ bool ConstructWorld(Model ** worldPtr)
 		1, 4, 3,
 		1, 3, 2
 	};
-	*worldPtr = new Model(pyramidVertices, pyramidIndices);
+
+	Material * mat = new Material();
+	std::string MTLPath;
+	Eigen::MatrixXf pyramidVertices;
+	std::vector<GLuint> pyramidIndices;
+	wvu::GetElementsFromOBJ("models/brick_wall_flat/wall.obj", MTLPath, pyramidVertices, pyramidIndices, true, false);
+	std::vector<wvu::MLTMaterial> materials;
+	wvu::ParseMTL("models/brick_wall_flat/", MTLPath, materials);
+	Material * mat = new Material(materials[0], "models/brick_wall_flat/");
+	*/
+
+	*worldPtr = new Model("models/brick_wall_flat/", "wall.obj");
 	(*worldPtr)->SetShaderProgram(shader);
 	return true;
 }
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
 	GLUTILS_GFLAGS_NAMESPACE::ParseCommandLineFlags(&argc, &argv, true);
 	google::InitGoogleLogging(argv[0]);
-	
+
 	if(chdir(FLAGS_workdir.c_str()) != 0)
 	{
 		std::cerr << "Failed to change the working directory to: " << FLAGS_workdir << std::endl;
 	}
-	
-	if (!glfwInit()) 
+
+	if (!glfwInit())
 	{
 		return -1;
 	}
@@ -166,8 +181,8 @@ int main(int argc, char** argv)
 
 	const std::string window_name = "CS 470 Final Project";
 	GLFWwindow* window = glfwCreateWindow(kWindowWidth, kWindowHeight, window_name.c_str(), nullptr, nullptr);
-  
-	if (!window) 
+
+	if (!window)
 	{
 		glfwTerminate();
 		return -1;
@@ -178,7 +193,7 @@ int main(int argc, char** argv)
 	glfwSetKeyCallback(window, KeyCallback);
 
 	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK) 
+	if (glewInit() != GLEW_OK)
 	{
 		std::cerr << "Glew did not initialize properly!" << std::endl;
 		glfwTerminate();
@@ -190,43 +205,43 @@ int main(int argc, char** argv)
 	const float field_of_view = wvu::ConvertDegreesToRadians(45.0f);
 	const float aspect_ratio = static_cast<float>(kWindowWidth / kWindowHeight);
 	const float near_plane = 0.1f;
-	const float far_plane = 10.0f;
+	const float far_plane = 1000.0f;
 	const Eigen::Matrix4f& projection = wvu::ComputePerspectiveProjectionMatrix(field_of_view, aspect_ratio, near_plane, far_plane);
 	const Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
 
 	//constexpr static GLfloat rotSpeed = 35.0;
 	//const Eigen::Vector3f rotAxis(0.0f, 1.0f, 0.0f);
-	
+	Camera* camera = new Camera(projection);
+	CameraController* cameraController = new CameraController(window, camera);
+
+
 	Model * world = nullptr;
-	
+
 	if(!ConstructWorld(&world))
 	{
 		std::cerr << "Failed to construct the world!" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
-	
-	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, -3.0f));
-	std::string outMtlLib;
-	std::vector<Eigen::Vector3f> outPoints;
-	std::vector<Eigen::Vector3f> outNormals;
-	std::vector<Eigen::Vector2f> outUVs;
-	std::vector<wvu::Face> outFaces;
-	wvu::ParseOBJFile("models/brick_wall_flat/wall.obj", outMtlLib, outPoints, outNormals, outUVs, outFaces);
-	for(int i = 0; i < outFaces.size(); ++i)
-	{
-		for(int j = 0; j < outFaces[i].verts.size(); ++j)
-		{
-			std::cout << outFaces[i].verts[j].indices[0] << "/" << outFaces[i].verts[j].indices[1] << "/" << outFaces[i].verts[j].indices[2] << " ";
-		}
-		std::cout << std::endl;
-	}
-	
-	while (!glfwWindowShouldClose(window)) 
-	{
 
+	double lastFrame = 0;
+
+	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, -250.0f));
+	world->Rotate(90.0f, 0.0f, 0.0f);
+
+	while (!glfwWindowShouldClose(window))
+	{
+		ClearTheFrameBuffer();
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		double currentFrame = glfwGetTime();
+		float deltaTime = static_cast<float>(currentFrame - lastFrame);
+		lastFrame = currentFrame;
+
+		cameraController->update(deltaTime);
 		// Render the scene!
-		world->Draw(projection, view);
+		world->Draw(camera);
 
 		// Swap front and back buffers.
 		glfwSwapBuffers(window);
