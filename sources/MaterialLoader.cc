@@ -86,3 +86,15 @@ bool wvu::ParseMTL(const std::string & ParentPath, const std::string & fileName,
 
 	return result;
 }
+
+bool wvu::IsFileExist(const std::string & filePath)
+{
+	bool result = false;
+	std::ifstream inFileStream(filePath, std::ifstream::in);
+	if(inFileStream.is_open())
+	{
+		result = true;
+		inFileStream.close();
+	}
+	return result;
+}

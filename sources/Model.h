@@ -10,6 +10,7 @@
 //#include "ShaderProgram.h"
 
 class ShaderProgram;
+class Material;
 
 class Model
 {
@@ -20,9 +21,13 @@ public:
 
 	Model(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices);
 
+	Model(const std::string & parentPath, const std::string & OBJfileName);
+
 	~Model();
 
 	void SetShaderProgram(ShaderProgram * shader);
+
+	void SetMaterial(Material * material);
 
 	void Draw(const Eigen::Matrix4f& projection, const Eigen::Matrix4f& view);
 
@@ -51,6 +56,8 @@ private:
 	std::vector<GLuint> m_indices;
 
 	ShaderProgram * m_shader;
+
+	Material * m_material;
 
 
 	GLuint vertex_buffer_object_id_;
