@@ -204,8 +204,8 @@ int main(int argc, char** argv)
 
 	const float field_of_view = wvu::ConvertDegreesToRadians(45.0f);
 	const float aspect_ratio = static_cast<float>(kWindowWidth / kWindowHeight);
-	const float near_plane = 0.1f;
-	const float far_plane = 1000.0f;
+	const float near_plane = 0.01f;
+	const float far_plane = 10000.0f;
 	const Eigen::Matrix4f& projection = wvu::ComputePerspectiveProjectionMatrix(field_of_view, aspect_ratio, near_plane, far_plane);
 	const Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
 
@@ -226,11 +226,15 @@ int main(int argc, char** argv)
 
 	double lastFrame = 0;
 
-	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, -250.0f));
-	world->Rotate(90.0f, 0.0f, 0.0f);
+	world->SetScale(0.01);
+	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, 0.0f));
+	//world->Rotate(0.0f, 0.0f, 0.0f);
+	camera->Rotate(90.0f, 0.0f, 0.0f);
+	camera->Translate(Eigen::Vector3f(20.0f, 0.0f, 0.0f));
 
 	while (!glfwWindowShouldClose(window))
 	{
+		//world->Rotate(0.01f, 0.0f, 0.0f);
 		ClearTheFrameBuffer();
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
