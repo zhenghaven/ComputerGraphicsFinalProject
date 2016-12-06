@@ -22,7 +22,7 @@ private:
   Eigen::Vector3f front;
   Eigen::Vector3f up;
 
-  float speed = 0.05;
+  float speed = 1.0;
 
   GLFWwindow* window;
 

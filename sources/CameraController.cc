@@ -26,6 +26,7 @@ CameraController::~CameraController()
 
 void CameraController::update(float deltaTime)
 {
+	speed = 5.0 * deltaTime;
 	if(window)
 	{
 		if(glfwGetKey(window, GLFW_KEY_W ) == GLFW_PRESS){
@@ -54,7 +55,6 @@ void CameraController::update(float deltaTime)
 
 	if(camera)
 	{
-		std::cout << offset << "\n";
 		camera->Translate(offset);
 		offset << 0,0,0;
 		front << 0,0,-1;
