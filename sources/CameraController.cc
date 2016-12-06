@@ -1,3 +1,7 @@
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+#include <math.h>
 #include "CameraController.h"
 #include "Camera.h"
 
@@ -26,6 +30,31 @@ CameraController::~CameraController()
 
 void CameraController::update(float deltaTime)
 {
+	double xpos, ypos;
+	glfwGetCursorPos(window, &xpos, &ypos);
+
+	float xOffset = xpos - lastX;
+	float yOffset = lastY - ypos;
+	xOffset *= 0.005;
+	yOffset *= 0.005;
+
+	lastY = ypos;
+	lastX = xpos;
+
+	yaw   += xOffset;
+	pitch += yOffset;
+
+	if(pitch > 89.0f)
+  	pitch =  89.0f;
+	if(pitch < -89.0f)
+  	pitch = -89.0f;
+
+	Eigen::Vector3f newfront;
+	newfront(0) = cos(ConvertDegreesToRadians(pitch)) * cos(ConvertDegreesToRadians(yaw));
+	newfront(1) = sin(ConvertDegreesToRadians(pitch));
+	newfront(2) = cos(ConvertDegreesToRadians(pitch)) * sin(ConvertDegreesToRadians(yaw));
+	front = newfront.normalized();
+
 	speed = 5.0 * deltaTime;
 	if(window)
 	{
@@ -55,19 +84,16 @@ void CameraController::update(float deltaTime)
 
 	if(camera)
 	{
+		std::cout << yaw << ", " << pitch << "\n";
 		camera->Translate(offset);
+		//camera->Rotate(yaw, pitch, 0);
 		offset << 0,0,0;
-		front << 0,0,-1;
-		up << 0,1,0;
 	}
 	else{
 		printf("Error: no camera\n");
 	}
+}
 
-	double xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
-
-
-
-
+float CameraController::ConvertDegreesToRadians(const float angle_in_degrees) {
+  return (angle_in_degrees * (M_PI / 180.0f));
 }

@@ -18,11 +18,17 @@ public:
 private:
   CameraController();
 
+  float ConvertDegreesToRadians(const float angle_in_degrees);
+
   Eigen::Vector3f offset;
   Eigen::Vector3f front;
   Eigen::Vector3f up;
 
   float speed = 1.0;
+
+  double lastX = 400, lastY = 300;
+
+  float pitch, yaw;
 
   GLFWwindow* window;
 

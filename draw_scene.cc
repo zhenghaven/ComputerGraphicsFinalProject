@@ -176,6 +176,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
 	glfwSetKeyCallback(window, KeyCallback);
