@@ -59,6 +59,7 @@
 #include "sources/CameraController.h"
 #include "sources/transformations.h"
 #include "sources/Model.h"
+#include "sources/ModelInstance.h"
 #include "sources/ShaderProgram.h"
 #include "sources/ModelLoader.h"
 #include "sources/Material.h"
@@ -119,44 +120,13 @@ bool ConstructWorld(Model ** worldPtr)
 		std::cout << shader->GetErrorMessage() << std::endl;
 		return false;
 	}
-/*
-	Eigen::MatrixXf pyramidVertices(5, 5);
-	pyramidVertices.block(0, 0, 3, 1) = Eigen::Vector3f( 0.0f,  0.5f, 0.0f);
-	pyramidVertices.block(3, 0, 2, 1) = Eigen::Vector2f(0.5, 0);
 
-	pyramidVertices.block(0, 1, 3, 1) = Eigen::Vector3f(-0.5f, -0.5f, 0.5f);
-	pyramidVertices.block(3, 1, 2, 1) = Eigen::Vector2f(0, 1);
 
-	pyramidVertices.block(0, 2, 3, 1) = Eigen::Vector3f( 0.5f, -0.5f, 0.5f);
-	pyramidVertices.block(3, 2, 2, 1) = Eigen::Vector2f(1, 1);
-
-	pyramidVertices.block(0, 3, 3, 1) = Eigen::Vector3f( 0.5f, -0.5f, -0.5f);
-	pyramidVertices.block(3, 3, 2, 1) = Eigen::Vector2f(0, 1);
-
-	pyramidVertices.block(0, 4, 3, 1) = Eigen::Vector3f(-0.5f, -0.5f, -0.5f);
-	pyramidVertices.block(3, 4, 2, 1) = Eigen::Vector2f(1, 1);
-	std::vector<GLuint> pyramidIndices =
-	{
-		0, 1, 2,
-		0, 2, 3,
-		0, 3, 4,
-		0, 4, 1,
-		1, 4, 3,
-		1, 3, 2
-	};
-
-	Material * mat = new Material();
-	std::string MTLPath;
-	Eigen::MatrixXf pyramidVertices;
-	std::vector<GLuint> pyramidIndices;
-	wvu::GetElementsFromOBJ("models/brick_wall_flat/wall.obj", MTLPath, pyramidVertices, pyramidIndices, true, false);
-	std::vector<wvu::MLTMaterial> materials;
-	wvu::ParseMTL("models/brick_wall_flat/", MTLPath, materials);
-	Material * mat = new Material(materials[0], "models/brick_wall_flat/");
-	*/
-
-	*worldPtr = new Model("models/brick_wall_flat/", "wall.obj");
-	(*worldPtr)->SetShaderProgram(shader);
+	*worldPtr = new Model();
+	ModelInstance * wall1 = new ModelInstance("models/brick_wall_flat/", "wall.obj");
+	//(*worldPtr)->SetShaderProgram(shader);
+	wall1->GetRealModel().lock()->SetShaderProgram(shader);
+	(*worldPtr)->AddChild(wall1);
 	return true;
 }
 

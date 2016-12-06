@@ -9,11 +9,13 @@
 #include <Eigen/Core>
 #include <GL/glew.h>
 
+#include "ModelBase.h"
+
 class ShaderProgram;
 class Material;
 class Camera;
 
-class Model
+class Model : public ModelBase
 {
 public:
 	Model();
@@ -26,56 +28,17 @@ public:
 
 	~Model();
 
-	void SetShaderProgram(ShaderProgram * shader);
+	virtual void SetShaderProgram(ShaderProgram * shader);
 
-	void SetMaterial(Material * material);
+	virtual void SetMaterial(Material * material);
 
-	void Draw(const Camera * camera);
+	virtual void Draw(const Camera * camera) override;
 
-	void SetPosition(const Eigen::Vector3f & position);
+	virtual const Eigen::MatrixXf& GetVertices() const;
 
-	//const Eigen::Vector3f& GetOrientation() const;
-
-	//const Eigen::Vector3f& GetPosition() const;
-
-	const Eigen::MatrixXf& GetVertices() const;
-
-	const std::vector<GLuint>& GetIndices() const;
-
-	void Translate(const Eigen::Vector3f & translation);
-
-	const Eigen::Vector3f GetUpVector() const;
-
-	const Eigen::Matrix4f GetLocalPose() const;
-
-	const Eigen::Matrix4f GetAbsolutePose() const;
-	
-	Model * GetParent() const;
-	
-	Model * GetChild(const std::string & childName) const;
-	
-	bool AddChild(const std::string & childName, Model * child);
-	
-	bool AddChild(Model * child);
-	
-	void DetachNode();
-
-	const Eigen::Vector3f GetLookDirection() const;
-
-	void Rotate(float yaw, float pitch, float roll);
-
-	void SetScale(float scale);
-
-protected:
-
-	Eigen::Matrix4f m_relativePose;
-
+	virtual const std::vector<GLuint>& GetIndices() const;
 
 private:
-
-	std::map<std::string, Model * > m_children;
-	
-	Model * m_parent;
 
 	Eigen::MatrixXf m_vertices;
 
