@@ -57,6 +57,8 @@ public:
 	bool AddChild(const std::string & childName, Model * child);
 	
 	bool AddChild(Model * child);
+	
+	void DetachNode();
 
 	const Eigen::Vector3f GetLookDirection() const;
 

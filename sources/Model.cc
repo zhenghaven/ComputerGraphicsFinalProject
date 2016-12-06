@@ -200,6 +200,14 @@ void Model::Draw(const Camera * camera)
 		glBindVertexArray(0);
 	}
 	m_material->UnBindMaterial();
+	
+	for (auto it = m_children.begin(); it != m_children.end(); ++it)
+	{
+		if(it->second)
+		{
+			it->second->Draw(camera);
+		}
+	}
 }
 
 const Eigen::MatrixXf& Model::GetVertices() const
@@ -285,6 +293,23 @@ bool Model::AddChild(Model * child)
 	randStr = "child_" + randStr;
 	
 	return AddChild(randStr, child);
+}
+
+void Model::DetachNode()
+{
+	if (m_parent != nullptr)
+	{
+		for (auto it = m_parent->m_children.begin(); it != m_parent->m_children.end(); ++it)
+		{
+			Model* model = it->second;
+			if (model == this)
+			{
+				m_parent->m_children.erase(it);
+				break;
+			}
+		}
+		m_parent = nullptr;
+	}
 }
 
 void Model::Rotate(float yaw, float pitch, float roll)
