@@ -99,6 +99,36 @@ Model::Model(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices
 	SetVertexArrayObject(vertex_array_object_id_, vertex_buffer_object_id_, element_buffer_object_id_, m_vertices, m_indices);
 }
 
+Model::Model(const std::string &parentPath, const std::string &OBJfileName) :
+		m_relativePose(Eigen::Matrix4f::Identity()),
+		vertex_buffer_object_id_(0),
+		vertex_array_object_id_(0),
+		element_buffer_object_id_(0),
+		m_shader(nullptr),
+		m_material(nullptr)
+{
+	std::string MTLPath;
+	Eigen::MatrixXf Vertices;
+	std::vector<GLuint> Indices;
+	wvu::GetElementsFromOBJ(parentPath + OBJfileName, MTLPath, Vertices, Indices, true, false);
+	std::vector<wvu::MLTMaterial> materials;
+	wvu::ParseMTL(parentPath, MTLPath, materials);
+	m_vertices = Vertices;
+	m_indices = Indices;
+/*
+	std::cout << m_vertices << std::endl << std::endl;
+	for(int i = 0; i < m_indices.size(); ++i)
+	{
+		if(i % 3 == 0)
+			std::cout << std::endl;
+		std::cout << m_indices[i] << " ";
+	}
+*/
+	SetVertexArrayObject(vertex_array_object_id_, vertex_buffer_object_id_, element_buffer_object_id_, m_vertices, m_indices);
+	Material * mat = new Material(materials[0], parentPath);
+	m_material = mat;
+}
+
 Model::~Model()
 {
 	if(vertex_array_object_id_ > 0)
@@ -126,11 +156,6 @@ void Model::SetMaterial(Material * material)
 	if(m_material)
 		delete m_material;
 	m_material = material;
-}
-
-void Model::SetOrientation(const Eigen::Vector3f& orientation)
-{
-
 }
 
 void Model::SetPosition(const Eigen::Vector3f& position)
@@ -169,39 +194,19 @@ void Model::Draw(const Camera * camera)
 	m_material->UnBindMaterial();
 }
 
-Model::Model(const std::string &parentPath, const std::string &OBJfileName) :
-		m_relativePose(Eigen::Matrix4f::Identity()),
-		vertex_buffer_object_id_(0),
-		vertex_array_object_id_(0),
-		element_buffer_object_id_(0),
-		m_shader(nullptr),
-		m_material(nullptr)
+const Eigen::MatrixXf& Model::GetVertices() const
 {
-	std::string MTLPath;
-	Eigen::MatrixXf Vertices;
-	std::vector<GLuint> Indices;
-	wvu::GetElementsFromOBJ(parentPath + OBJfileName, MTLPath, Vertices, Indices, true, false);
-	std::vector<wvu::MLTMaterial> materials;
-	wvu::ParseMTL(parentPath, MTLPath, materials);
-	m_vertices = Vertices;
-	m_indices = Indices;
+	return m_vertices;
+}
 
-	std::cout << m_vertices << std::endl << std::endl;
-	for(int i = 0; i < m_indices.size(); ++i)
-	{
-		if(i % 3 == 0)
-			std::cout << std::endl;
-		std::cout << m_indices[i] << " ";
-	}
-
-	SetVertexArrayObject(vertex_array_object_id_, vertex_buffer_object_id_, element_buffer_object_id_, m_vertices, m_indices);
-	Material * mat = new Material(materials[0], parentPath);
-	m_material = mat;
+const std::vector<GLuint>& Model::GetIndices() const
+{
+	return m_indices;
 }
 
 void Model::Translate(const Eigen::Vector3f & translation)
 {
-	m_relativePose *= wvu::ComputeTranslationMatrix(translation);
+	m_relativePose = wvu::ComputeTranslationMatrix(translation) * m_relativePose;
 }
 
 const Eigen::Vector3f Model::GetUpVector() const
@@ -225,24 +230,29 @@ const Eigen::Matrix4f Model::GetPose() const
 
 void Model::Rotate(float yaw, float pitch, float roll)
 {
-	Eigen::Matrix3f m;
-	m = Eigen::AngleAxisf(wvu::ConvertDegreesToRadians(yaw), Eigen::Vector3f::UnitY())
-		* Eigen::AngleAxisf(wvu::ConvertDegreesToRadians(pitch), Eigen::Vector3f::UnitX())
-		* Eigen::AngleAxisf(wvu::ConvertDegreesToRadians(roll), Eigen::Vector3f::UnitZ());
-/*
-	Eigen::Vector3f upUnitVector = position.block(0, 1, 3, 1);
-	position *= wvu::ComputeRotationMatrix(upUnitVector, wvu::ConvertDegreesToRadians(yaw));
+	Eigen::Matrix3f transform3f(Eigen::Matrix3f::Identity());
+	if(yaw != 0)
+	{
+		Eigen::AngleAxisf rotationYaw(wvu::ConvertDegreesToRadians(yaw), Eigen::Vector3f::UnitY());
+		transform3f = (rotationYaw.matrix() * transform3f);
+	}
+	if(pitch != 0)
+	{
+		Eigen::AngleAxisf rotationPitch(wvu::ConvertDegreesToRadians(pitch), Eigen::Vector3f::UnitX());
+		transform3f = (rotationPitch.matrix() * transform3f);
+	}
+	if(roll != 0)
+	{
+		Eigen::AngleAxisf rotationRoll(wvu::ConvertDegreesToRadians(roll), Eigen::Vector3f::UnitZ());
+		transform3f = (rotationRoll.matrix() * transform3f);
+	}
 
-	Eigen::Vector3f horizontalUnitVector = Eigen::Vector3f(position.block(0, 0, 3, 1)) + Eigen::Vector3f(position.block(0, 2, 3, 1));
-	horizontalUnitVector.normalize();
-	position *= wvu::ComputeRotationMatrix(horizontalUnitVector, wvu::ConvertDegreesToRadians(pitch));
- */
-	Eigen::Matrix4f transform;
-	transform.block(0, 0, 3, 3) = m;
-	m_relativePose *= transform;
+	Eigen::Matrix4f transform(Eigen::Matrix4f::Identity());
+	transform.block(0, 0, 3, 3) = transform3f;
+	m_relativePose = transform * m_relativePose;
 }
 
 void Model::SetScale(float scale)
 {
-	m_relativePose *= wvu::ComputeScalingMatrix(scale);
+	m_relativePose = wvu::ComputeScalingMatrix(scale) * m_relativePose;
 }

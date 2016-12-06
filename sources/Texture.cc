@@ -12,6 +12,18 @@ Texture::Texture(const std::string & filePath) :
 	LoadTexture(filePath, m_textureID);
 }
 
+Texture::Texture() :
+	m_textureID(0)
+{
+
+}
+
+Texture::~Texture()
+{
+	if(m_textureID != 0)
+		glDeleteTextures(1, &m_textureID);
+}
+
 bool Texture::IsValid() const
 {
 	return m_textureID != 0;
@@ -48,10 +60,4 @@ bool Texture::LoadTexture(const std::string & filePath, GLuint & outTextureID)
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	outTextureID = texture_id;
-}
-
-Texture::Texture() :
-	m_textureID(0)
-{
-
 }

@@ -20,6 +20,8 @@ public:
 	Material(const wvu::MLTMaterial & materialInfo, const std::string & parentPath = "");
 
 	Material();
+	
+	~Material();
 
 	Material(const Eigen::Vector4f & m_baseColor);
 	

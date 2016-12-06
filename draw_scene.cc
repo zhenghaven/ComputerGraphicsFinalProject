@@ -229,12 +229,13 @@ int main(int argc, char** argv)
 	world->SetScale(0.01);
 	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, 0.0f));
 	//world->Rotate(0.0f, 0.0f, 0.0f);
-	camera->Rotate(90.0f, 0.0f, 0.0f);
-	camera->Translate(Eigen::Vector3f(20.0f, 0.0f, 0.0f));
+	//camera->Rotate(90.0f, 0.0f, 0.0f);
+	camera->Translate(Eigen::Vector3f(0.0f, 0.0f, -20.0f));
 
 	while (!glfwWindowShouldClose(window))
 	{
-		//world->Rotate(0.01f, 0.0f, 0.0f);
+		//camera->Rotate(0.01f, 0.0f, 0.0f);
+		world->Rotate(0.1f, 0.0f, 0.0f);
 		ClearTheFrameBuffer();
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

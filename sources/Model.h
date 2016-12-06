@@ -32,8 +32,6 @@ public:
 
 	void Draw(const Camera * camera);
 
-	void SetOrientation(const Eigen::Vector3f & orientation);
-
 	void SetPosition(const Eigen::Vector3f & position);
 
 	//const Eigen::Vector3f& GetOrientation() const;

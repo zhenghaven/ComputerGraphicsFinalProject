@@ -14,6 +14,8 @@ class Texture
 public:
 	Texture(const std::string & filePath);
 	
+	~Texture();
+	
 	bool IsValid() const;
 	
 	void BindTexture() const;

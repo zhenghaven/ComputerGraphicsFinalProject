@@ -31,6 +31,12 @@ Material::Material(const wvu::MLTMaterial & materialInfo, const std::string & pa
 	}
 	
 }
+
+Material::~Material()
+{
+	if(m_map_Kd)
+		delete m_map_Kd;
+}
 	
 bool Material::IsValid() const
 {
