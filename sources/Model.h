@@ -4,10 +4,10 @@
 #define MODEL_HEADER
 
 #include <vector>
+#include <map>
+
 #include <Eigen/Core>
 #include <GL/glew.h>
-
-//#include "ShaderProgram.h"
 
 class ShaderProgram;
 class Material;
@@ -46,7 +46,17 @@ public:
 
 	const Eigen::Vector3f GetUpVector() const;
 
-	const Eigen::Matrix4f GetPose() const;
+	const Eigen::Matrix4f GetLocalPose() const;
+
+	const Eigen::Matrix4f GetAbsolutePose() const;
+	
+	Model * GetParent() const;
+	
+	Model * GetChild(const std::string & childName) const;
+	
+	bool AddChild(const std::string & childName, Model * child);
+	
+	bool AddChild(Model * child);
 
 	const Eigen::Vector3f GetLookDirection() const;
 
@@ -60,6 +70,10 @@ protected:
 
 
 private:
+
+	std::map<std::string, Model * > m_children;
+	
+	Model * m_parent;
 
 	Eigen::MatrixXf m_vertices;
 

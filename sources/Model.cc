@@ -1,7 +1,11 @@
 
 #include "Model.h"
 
+#include <cstdlib>
+#include <ctime>
+
 #include <iostream>
+#include <string>
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -64,6 +68,7 @@ static inline void SetVertexArrayObject(GLuint & vertex_array_object_id, GLuint 
 }
 
 Model::Model() :
+	m_parent(nullptr),
 	m_relativePose(Eigen::Matrix4f::Identity()),
 	vertex_buffer_object_id_(0),
 	vertex_array_object_id_(0),
@@ -75,6 +80,7 @@ Model::Model() :
 }
 
 Model::Model(const Eigen::MatrixXf& vertices) :
+	m_parent(nullptr),
 	m_relativePose(Eigen::Matrix4f::Identity()),
 	m_vertices(vertices),
 	vertex_buffer_object_id_(0),
@@ -87,6 +93,7 @@ Model::Model(const Eigen::MatrixXf& vertices) :
 }
 
 Model::Model(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices) :
+	m_parent(nullptr),
 	m_relativePose(Eigen::Matrix4f::Identity()),
 	m_vertices(vertices),
 	m_indices(indices),
@@ -100,12 +107,13 @@ Model::Model(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices
 }
 
 Model::Model(const std::string &parentPath, const std::string &OBJfileName) :
-		m_relativePose(Eigen::Matrix4f::Identity()),
-		vertex_buffer_object_id_(0),
-		vertex_array_object_id_(0),
-		element_buffer_object_id_(0),
-		m_shader(nullptr),
-		m_material(nullptr)
+	m_parent(nullptr),
+	m_relativePose(Eigen::Matrix4f::Identity()),
+	vertex_buffer_object_id_(0),
+	vertex_array_object_id_(0),
+	element_buffer_object_id_(0),
+	m_shader(nullptr),
+	m_material(nullptr)
 {
 	std::string MTLPath;
 	Eigen::MatrixXf Vertices;
@@ -174,9 +182,9 @@ void Model::Draw(const Camera * camera)
 
 	//const Eigen::Matrix4f model = ComputeModelMatrix();
 	m_shader->Use();
-	m_shader->SetUniformIfExistMatrix4fv("view", camera->GetPose().data());
+	m_shader->SetUniformIfExistMatrix4fv("view", camera->GetAbsolutePose().data());
 	m_shader->SetUniformIfExistMatrix4fv("projection", camera->GetProjection().data());
-	m_shader->SetUniformIfExistMatrix4fv("model", m_relativePose.data());
+	m_shader->SetUniformIfExistMatrix4fv("model", GetAbsolutePose().data());
 
 	m_material->BindMaterial(m_shader);
 	if(m_vertices.size() > 0 && m_indices.size() == 0)
@@ -223,9 +231,60 @@ const Eigen::Vector3f Model::GetLookDirection() const
 	return direction;
 }
 
-const Eigen::Matrix4f Model::GetPose() const
+const Eigen::Matrix4f Model::GetLocalPose() const
 {
 	return m_relativePose;
+}
+
+const Eigen::Matrix4f Model::GetAbsolutePose() const
+{
+	Model * parent = GetParent();
+	if(parent)
+	{
+		return (parent->GetAbsolutePose() * GetLocalPose());
+	}
+	else
+	{
+		return GetLocalPose();
+	}
+}
+
+Model * Model::GetParent() const
+{
+	return m_parent;
+}
+
+Model * Model::GetChild(const std::string & childName) const
+{
+	auto found = m_children.find(childName);
+	if(found != m_children.end())
+	{
+		return found->second;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+bool Model::AddChild(const std::string & childName, Model * child)
+{
+	auto found = m_children.find(childName);
+	if(found != m_children.end())
+	{
+		return false;
+	}
+	
+	m_children[childName] = child;
+}
+
+bool Model::AddChild(Model * child)
+{
+	srand(time(NULL));
+	std::string randStr = std::to_string(rand());
+	randStr = "child_" + randStr;
+	
+	return AddChild(randStr, child);
 }
 
 void Model::Rotate(float yaw, float pitch, float roll)
