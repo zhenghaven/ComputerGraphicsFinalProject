@@ -50,7 +50,7 @@ uniform sampler2D texture_sampler;
 
 void main()
 {
-	if(useTexture > 0.5)
+	if(useTexture > 0.05)
 	{
 		color = texture(texture_sampler, texel);
 	}

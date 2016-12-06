@@ -119,7 +119,7 @@ bool ConstructWorld(Model ** worldPtr)
 
 	if(!shader->IsValid())
 	{
-		std::cout << shader->GetErrorMessage() << std::endl;
+		std::cout << "Shader error: " << shader->GetErrorMessage() << std::endl;
 		return false;
 	}
 
@@ -134,7 +134,7 @@ bool ConstructWorld(Model ** worldPtr)
 	FlatWallCement->SetShaderProgram(shader);
 	FlatWall->GetRealModel()->AddChild("FlatWallWall", FlatWallWall);
 	FlatWall->GetRealModel()->AddChild("FlatWallCement", FlatWallCement);
-	
+
 	ModelInstance * FlatWall2 = FlatWall->CreateNewInstance();
 	FlatWall->SetScale(0.01);
 	FlatWall->Rotate(90.0f, 0.0f, 0.0f);

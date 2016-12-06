@@ -17,19 +17,14 @@ public:
   void update(float deltaTime);
 private:
   CameraController();
-  
-  float speed = 20.0;
 
-  bool moveForward = false;
-  bool moveBackward = false;
-  bool moveRight = false;
-  bool moveLeft = false;
-  bool moveUp = false;
-  bool moveDown = false;
+  Eigen::Vector3f offset;
+  Eigen::Vector3f front;
+  Eigen::Vector3f up;
+
+  float speed = 0.05;
 
   GLFWwindow* window;
 
   Camera* camera;
-
-  float GetMultiplier(bool add, bool substruct, float scale = 0.0f);
 };
