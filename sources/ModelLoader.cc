@@ -204,14 +204,7 @@ void wvu::ToSingleIndices(const std::vector<Eigen::Vector3f> & inPoints, const s
 			outVertices.block(3, OriVertices.size() + i, 3, 1) = AddVertices[i].nor;
 		}
 	}
-	
-	std::cout << outVertices << std::endl << std::endl;
-	for(int i = 0; i < outIndices.size(); ++i)
-	{
-		if(i % 3 == 0)
-			std::cout << std::endl;
-		std::cout << outIndices[i] << " ";
-	}
+
 }
 
 bool wvu::GetElementsFromOBJ(const std::string & filePath, std::string & outMtlLib, Eigen::MatrixXf & outVertices, std::vector<GLuint> & outIndices, bool inIgnoreNormal, bool inIgnoreUV)

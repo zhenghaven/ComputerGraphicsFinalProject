@@ -54,16 +54,14 @@ public:
 
 	void Rotate(float yaw, float pitch, float roll);
 
+	void SetScale(float scale);
+
 protected:
 
 	Eigen::Matrix4f m_relativePose;
 
 
 private:
-
-	//Eigen::Vector3f orientation;
-
-	//Eigen::Vector3f position;
 
 	Eigen::MatrixXf m_vertices;
 

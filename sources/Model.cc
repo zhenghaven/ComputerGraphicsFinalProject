@@ -26,13 +26,13 @@ static inline void SetVertexBufferObject(GLuint & vertex_buffer_object_id, const
 	GLuint kIndex = 0;
 	constexpr GLuint kNumElementsPerVertex = 5;
 	constexpr GLuint kStride = kNumElementsPerVertex * sizeof(vertices(0, 0));
-	const GLvoid* offset_ptr = nullptr;
-	glVertexAttribPointer(kIndex, 3, GL_FLOAT, GL_FALSE, kStride, offset_ptr);
+	int offset_ptr = 0;
+	glVertexAttribPointer(kIndex, 3, GL_FLOAT, GL_FALSE, kStride, reinterpret_cast<GLvoid *>(offset_ptr));
 	glEnableVertexAttribArray(kIndex);
 
 	kIndex = 1;
-	offset_ptr = reinterpret_cast<GLvoid*>(3 * sizeof(vertices(0, 0)));
-	glVertexAttribPointer(kIndex, 2, GL_FLOAT, GL_FALSE, kStride, offset_ptr);
+	offset_ptr = 3 * sizeof(vertices(0, 0));
+	glVertexAttribPointer(kIndex, 2, GL_FLOAT, GL_FALSE, kStride, reinterpret_cast<GLvoid *>(offset_ptr));
 	glEnableVertexAttribArray(kIndex);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -185,6 +185,15 @@ Model::Model(const std::string &parentPath, const std::string &OBJfileName) :
 	wvu::ParseMTL(parentPath, MTLPath, materials);
 	m_vertices = Vertices;
 	m_indices = Indices;
+
+	std::cout << m_vertices << std::endl << std::endl;
+	for(int i = 0; i < m_indices.size(); ++i)
+	{
+		if(i % 3 == 0)
+			std::cout << std::endl;
+		std::cout << m_indices[i] << " ";
+	}
+
 	SetVertexArrayObject(vertex_array_object_id_, vertex_buffer_object_id_, element_buffer_object_id_, m_vertices, m_indices);
 	Material * mat = new Material(materials[0], parentPath);
 	m_material = mat;
@@ -231,4 +240,9 @@ void Model::Rotate(float yaw, float pitch, float roll)
 	Eigen::Matrix4f transform;
 	transform.block(0, 0, 3, 3) = m;
 	m_relativePose *= transform;
+}
+
+void Model::SetScale(float scale)
+{
+	m_relativePose *= wvu::ComputeScalingMatrix(scale);
 }
