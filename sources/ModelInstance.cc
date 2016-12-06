@@ -40,7 +40,7 @@ ModelInstance::ModelInstance(const std::string &parentPath, const std::string &O
 }
 
 ModelInstance::ModelInstance(const ModelInstance & other) :
-	m_actualModel(other.GetRealModel().lock())
+	m_actualModel(other.GetRealModel())
 {
 	
 }
@@ -57,7 +57,7 @@ ModelInstance::~ModelInstance()
 	m_children.clear();
 }
 	
-std::weak_ptr<Model> ModelInstance::GetRealModel() const
+std::shared_ptr<Model> ModelInstance::GetRealModel() const
 {
 	return m_actualModel;
 }

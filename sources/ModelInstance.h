@@ -32,7 +32,7 @@ public:
 
 	~ModelInstance();
 	
-	virtual std::weak_ptr<Model> GetRealModel() const;
+	virtual std::shared_ptr<Model> GetRealModel() const;
 	
 	virtual ModelInstance * CreateNewInstance() const;
 	

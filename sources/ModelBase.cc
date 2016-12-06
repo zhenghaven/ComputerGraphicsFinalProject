@@ -2,7 +2,6 @@
 #include "ModelBase.h"
 
 #include <cstdlib>
-#include <ctime>
 
 #include <iostream>
 #include <string>
@@ -163,7 +162,6 @@ bool ModelBase::AddChild(const std::string & childName, ModelBase * child)
 
 bool ModelBase::AddChild(ModelBase * child)
 {
-	srand(time(NULL));
 	std::string randStr = std::to_string(rand());
 	randStr = "child_" + randStr;
 	

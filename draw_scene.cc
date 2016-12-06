@@ -35,6 +35,8 @@
 
 // TODO: Include the headers you need for your project.
 
+#include <ctime>
+
 #include <iostream>
 #include <string>
 #include <unistd.h>
@@ -123,10 +125,25 @@ bool ConstructWorld(Model ** worldPtr)
 
 
 	*worldPtr = new Model();
-	ModelInstance * wall1 = new ModelInstance("models/brick_wall_flat/", "wall.obj");
-	//(*worldPtr)->SetShaderProgram(shader);
-	wall1->GetRealModel().lock()->SetShaderProgram(shader);
-	(*worldPtr)->AddChild(wall1);
+
+	ModelInstance * FlatWall = new ModelInstance();
+
+	Model * FlatWallWall = new Model("models/brick_wall_flat/", "wall.obj");
+	FlatWallWall->SetShaderProgram(shader);
+	Model * FlatWallCement = new Model("models/brick_wall_flat/", "cement.obj");
+	FlatWallCement->SetShaderProgram(shader);
+	FlatWall->GetRealModel()->AddChild("FlatWallWall", FlatWallWall);
+	FlatWall->GetRealModel()->AddChild("FlatWallCement", FlatWallCement);
+	
+	ModelInstance * FlatWall2 = FlatWall->CreateNewInstance();
+	FlatWall->SetScale(0.01);
+	FlatWall->Rotate(90.0f, 0.0f, 0.0f);
+	FlatWall->Translate(Eigen::Vector3f(0.0f, 3.0f, 0.0f));
+	FlatWall2->SetScale(0.01);
+	FlatWall2->Translate(Eigen::Vector3f(0.0f, -3.0f, 0.0f));
+
+	(*worldPtr)->AddChild(FlatWall);
+	(*worldPtr)->AddChild(FlatWall2);
 	return true;
 }
 
@@ -134,6 +151,7 @@ int main(int argc, char** argv)
 {
 	GLUTILS_GFLAGS_NAMESPACE::ParseCommandLineFlags(&argc, &argv, true);
 	google::InitGoogleLogging(argv[0]);
+	srand(time(NULL));
 
 	if(chdir(FLAGS_workdir.c_str()) != 0)
 	{
@@ -196,7 +214,7 @@ int main(int argc, char** argv)
 
 	double lastFrame = 0;
 
-	world->SetScale(0.01);
+	//world->SetScale(0.01);
 	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, 0.0f));
 	//world->Rotate(0.0f, 0.0f, 0.0f);
 	//camera->Rotate(90.0f, 0.0f, 0.0f);
