@@ -49,6 +49,7 @@ bool Texture::LoadTexture(const std::string & filePath, GLuint & outTextureID)
 	const int width = image.width();
 	const int height = image.height();
 	image.permute_axes("cxyz");
+	image.mirror('z');
 	GLuint texture_id;
 	glGenTextures(1, &texture_id);
 	glBindTexture(GL_TEXTURE_2D, texture_id);
