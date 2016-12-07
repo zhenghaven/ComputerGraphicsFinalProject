@@ -137,6 +137,7 @@ bool ConstructWorld(Model ** worldPtr)
 	skyBox->SetScale(1000);
 
 	//Walls
+	/*
 	ModelInstance * BackWall1 = new ModelInstance();
 	Model * BrickWall1 = new Model("models/brick_wall_flat/", "wall.obj");
 	BrickWall1->SetShaderProgram(shader);
@@ -232,7 +233,6 @@ bool ConstructWorld(Model ** worldPtr)
 	BackWall8->Rotate(0.0f,0.0f,0.0f);
 	BackWall8->Translate(Eigen::Vector3f(-4.0f,0.0f,13.0f));
 	(*worldPtr)->AddChild(BackWall8);
-
 	// Grass Tiles
 
 	ModelInstance * Grass1 = new ModelInstance();
@@ -242,6 +242,7 @@ bool ConstructWorld(Model ** worldPtr)
 	Grass1->SetScale(10.0);
 	Grass1->Translate(Eigen::Vector3f(0.0f,0.0f,1.0f));
 	(*worldPtr)->AddChild(Grass1);
+*/
 
 
 	//Planets
@@ -305,8 +306,7 @@ int main(int argc, char** argv)
 	const Eigen::Matrix4f& projection = wvu::ComputePerspectiveProjectionMatrix(field_of_view, aspect_ratio, near_plane, far_plane);
 	const Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
 
-	//constexpr static GLfloat rotSpeed = 35.0;
-	//const Eigen::Vector3f rotAxis(0.0f, 1.0f, 0.0f);
+
 	Camera* camera = new Camera(projection);
 	CameraController* cameraController = new CameraController(window, camera);
 
@@ -323,10 +323,10 @@ int main(int argc, char** argv)
 	Scene scene(world);
 
 	//world->SetScale(0.01);
-	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, 0.0f));
+	//world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, 0.0f));
 	//world->Rotate(0.0f, 0.0f, 0.0f);
 	//camera->Rotate(90.0f, 0.0f, 0.0f);
-	camera->Translate(Eigen::Vector3f(0.0f, 0.0f, -20.0f));
+	//camera->Translate(Eigen::Vector3f(0.0f, 0.0f, -20.0f));
 
 
 	double lastFrame = 0;

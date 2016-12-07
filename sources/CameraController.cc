@@ -77,7 +77,7 @@ void CameraController::update(float deltaTime)
 				m_lastMouseY = currentMouseY;
 				if(camera)
 				{
-					camera->Rotate(MouseOffsetX, MouseOffsetY, 0.0f);
+					camera->Rotate(2 * MouseOffsetX, 2 * MouseOffsetY, 0.0f);
 					//std::cout << MouseOffsetX << " | " << MouseOffsetY << std::endl;
 				}
 			}
