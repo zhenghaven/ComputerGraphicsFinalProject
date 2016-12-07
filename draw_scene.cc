@@ -239,7 +239,7 @@ bool ConstructWorld(Model ** worldPtr)
 	Model * GrassTile1 = new Model("models/Grass/", "grass.obj");
 	GrassTile1->SetShaderProgram(shader);
 	Grass1->AddChild(GrassTile1);
-	Grass1->SetScale(1.0);
+	Grass1->SetScale(10.0);
 	Grass1->Translate(Eigen::Vector3f(0.0f,0.0f,1.0f));
 	(*worldPtr)->AddChild(Grass1);
 
