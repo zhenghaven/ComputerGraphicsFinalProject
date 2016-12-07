@@ -5,6 +5,7 @@
 
 class Camera;
 class ModelBase;
+class Model;
 
 class Scene
 {
@@ -19,6 +20,8 @@ private:
 	Scene();
 
 	ModelBase * m_world;
+	
+	Model * m_skyBox;
 	
 };
 

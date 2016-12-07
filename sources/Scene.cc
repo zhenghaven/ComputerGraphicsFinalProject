@@ -114,6 +114,13 @@ Scene::Scene(ModelBase * world) :
 	world->AddChild(Grass_row_3);
 	world->AddChild(Grass_row_4);
 	world->AddChild(Grass_row_5);
+	
+	
+	m_skyBox = new  Model("models/Sky/", "skybox.obj");
+	m_skyBox->SetShaderProgram(shader);
+	m_skyBox->SetScale(1000);
+	
+	world->AddChild(m_skyBox);
 }
 
 Scene::Scene() : 
@@ -131,5 +138,5 @@ void Scene::Update(float deltaTime)
 {
 	//Update position here.
 	//The world and its children will be draw in the main loop.
-	
+	m_skyBox->Rotate(deltaTime * 0.5f, 0.0f, 0.0f);
 }

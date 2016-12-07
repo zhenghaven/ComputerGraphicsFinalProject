@@ -132,9 +132,6 @@ bool ConstructWorld(Model ** worldPtr)
 //Initialize models
 
 	//Sky box
-	Model * skyBox = new  Model("models/Sky/", "skybox.obj");
-	skyBox->SetShaderProgram(shader);
-	skyBox->SetScale(1000);
 
 	//Planets
 
@@ -144,9 +141,6 @@ bool ConstructWorld(Model ** worldPtr)
 	alderaan->Translate(Eigen::Vector3f(0.0f,0.0f,0.0f));
 	(*worldPtr)->AddChild(alderaan);
 
-
-
-	(*worldPtr)->AddChild(skyBox);
 
 	return true;
 }
@@ -199,7 +193,6 @@ int main(int argc, char** argv)
 	const float near_plane = 0.01f;
 	const float far_plane = 10000.0f;
 	const Eigen::Matrix4f& projection = wvu::ComputePerspectiveProjectionMatrix(field_of_view, aspect_ratio, near_plane, far_plane);
-	const Eigen::Matrix4f view = Eigen::Matrix4f::Identity();
 
 
 	Camera* camera = new Camera(projection);
