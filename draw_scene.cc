@@ -126,6 +126,14 @@ bool ConstructWorld(Model ** worldPtr)
 
 	*worldPtr = new Model();
 
+	ModelInstance * sky = new ModelInstance();
+
+	Model * skyBox = new  Model("models/Sky/", "skybox.obj");
+	skyBox->SetShaderProgram(shader);
+	sky->GetRealModel()->AddChild("skyBox", skyBox);
+	skyBox->SetScale(1000.0);
+	skyBox->Translate(Eigen::Vector3f(0.0f,0.0f,0.0f));
+
 	ModelInstance * FlatWall = new ModelInstance();
 
 	Model * FlatWallWall = new Model("models/brick_wall_flat/", "wall.obj");
@@ -142,6 +150,7 @@ bool ConstructWorld(Model ** worldPtr)
 	FlatWall2->SetScale(0.01);
 	FlatWall2->Translate(Eigen::Vector3f(0.0f, -3.0f, 0.0f));
 
+	(*worldPtr)->AddChild(sky);
 	(*worldPtr)->AddChild(FlatWall);
 	(*worldPtr)->AddChild(FlatWall2);
 	return true;
@@ -223,7 +232,7 @@ int main(int argc, char** argv)
 	while (!glfwWindowShouldClose(window))
 	{
 		//camera->Rotate(0.01f, 0.0f, 0.0f);
-		world->Rotate(0.1f, 0.0f, 0.0f);
+	//	world->Rotate(0.1f, 0.0f, 0.0f);
 		ClearTheFrameBuffer();
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
