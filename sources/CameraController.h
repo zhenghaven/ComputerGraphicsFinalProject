@@ -27,4 +27,10 @@ private:
   GLFWwindow* window;
 
   Camera* camera;
+  
+  bool m_wasMousePressed;
+  
+  double m_lastMouseX;
+  
+  double m_lastMouseY;
 };
