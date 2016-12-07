@@ -66,6 +66,7 @@
 #include "sources/ModelLoader.h"
 #include "sources/Material.h"
 #include "sources/MaterialLoader.h"
+#include "sources/Scene.h"
 
 DEFINE_string(workdir, "./", "The path to working directory.");
 
@@ -220,8 +221,8 @@ int main(int argc, char** argv)
 		glfwTerminate();
 		return -1;
 	}
-
-	double lastFrame = 0;
+	
+	Scene scene(world);
 
 	//world->SetScale(0.01);
 	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, 0.0f));
@@ -229,10 +230,12 @@ int main(int argc, char** argv)
 	//camera->Rotate(90.0f, 0.0f, 0.0f);
 	camera->Translate(Eigen::Vector3f(0.0f, 0.0f, -20.0f));
 
+
+	double lastFrame = 0;
+	
 	while (!glfwWindowShouldClose(window))
 	{
-		//camera->Rotate(0.01f, 0.0f, 0.0f);
-	//	world->Rotate(0.1f, 0.0f, 0.0f);
+		
 		ClearTheFrameBuffer();
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -240,6 +243,8 @@ int main(int argc, char** argv)
 		double currentFrame = glfwGetTime();
 		float deltaTime = static_cast<float>(currentFrame - lastFrame);
 		lastFrame = currentFrame;
+		
+		scene.Update(deltaTime);
 
 		cameraController->update(deltaTime);
 		// Render the scene!

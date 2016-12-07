@@ -109,10 +109,5 @@ void CameraController::update(float deltaTime)
 		printf("Error: no camera\n");
 	}
 
-	double xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
-
-
-
 
 }
