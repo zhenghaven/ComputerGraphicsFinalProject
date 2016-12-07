@@ -363,14 +363,17 @@ bool ConstructWorld(Model ** worldPtr)
 	Grass16->Translate(Eigen::Vector3f(10.0f,-1.1f,15.0f));
 	(*worldPtr)->AddChild(Grass16);
 
-
 	//Planets
 
-//Instance Models
+	Model * alderaan = new  Model("models/Alderaan/", "Alderaan.obj");
+	alderaan->SetShaderProgram(shader);
+	alderaan->SetScale(0.01);
+	alderaan->Translate(Eigen::Vector3f(0.0f,0.0f,0.0f));
+	(*worldPtr)->AddChild(alderaan);
 
-	//Courtyard
 
-	//(*worldPtr)->AddChild(skyBox);
+
+	(*worldPtr)->AddChild(skyBox);
 
 	return true;
 }
@@ -446,7 +449,7 @@ int main(int argc, char** argv)
 	world->SetPosition(Eigen::Vector3f(0.0f, 0.0f, 0.0f));
 	//world->Rotate(0.0f, 0.0f, 0.0f);
 	//camera->Rotate(90.0f, 0.0f, 0.0f);
-	camera->Translate(Eigen::Vector3f(0.0f, 0.0f, -20.0f));
+	camera->Translate(Eigen::Vector3f(0.0f, -10.0f, -20.0f));
 
 
 	double lastFrame = 0;
