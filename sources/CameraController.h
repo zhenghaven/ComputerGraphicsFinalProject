@@ -15,14 +15,16 @@ public:
   ~CameraController();
 
   void update(float deltaTime);
+  
 private:
+
   CameraController();
 
   Eigen::Vector3f offset;
   Eigen::Vector3f front;
   Eigen::Vector3f up;
 
-  float speed = 1.0;
+  float speed;
 
   GLFWwindow* window;
 

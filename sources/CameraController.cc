@@ -10,16 +10,18 @@
 
 #include "transformations.h"
 
-CameraController::CameraController(GLFWwindow* glwindow, Camera* cam) 
-	: m_wasMousePressed(false),
+CameraController::CameraController(GLFWwindow* glwindow, Camera* cam)  : 
+	offset(Eigen::Vector3f(0.0f, 0.0f, 0.0f)),
+	front(Eigen::Vector3f(0.0f, 0.0f, -1.0f)),
+	up(Eigen::Vector3f(0.0f, 1.0f, 0.0f)),
+	speed(1.0f),
+	window(glwindow),
+	camera(cam),
+	m_wasMousePressed(false),
 	m_lastMouseX(0.0),
 	m_lastMouseY(0.0)
 {
-	window = glwindow;
-	camera = cam;
-	offset << 0, 0, 0;
-	front << 0, 0, -1;
-	up << 0, 1, 0;
+
 }
 
 CameraController::~CameraController()
@@ -32,6 +34,11 @@ CameraController::~CameraController()
 void CameraController::update(float deltaTime)
 {
 	speed = 5.0 * deltaTime;
+	
+	offset = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
+	front = Eigen::Vector3f(0.0f, 0.0f, -1.0f);
+	up = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
+	
 	if(window)
 	{
 		if(glfwGetKey(window, GLFW_KEY_W ) == GLFW_PRESS)
@@ -64,9 +71,8 @@ void CameraController::update(float deltaTime)
 			offset += speed * up;
 		}
 		
-		if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT ) == GLFW_PRESS){
-		
-			//std::cout << "Mouse Pressed" << std::endl;
+		if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT ) == GLFW_PRESS)
+		{
 			if(m_wasMousePressed)
 			{
 				double currentMouseX, currentMouseY = 0.0;
@@ -78,7 +84,6 @@ void CameraController::update(float deltaTime)
 				if(camera)
 				{
 					camera->Rotate(2 * MouseOffsetX, 2 * MouseOffsetY, 0.0f);
-					//std::cout << MouseOffsetX << " | " << MouseOffsetY << std::endl;
 				}
 			}
 			else
@@ -88,9 +93,9 @@ void CameraController::update(float deltaTime)
 				
 			}
 		}
-		if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT ) == GLFW_RELEASE){
+		if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT ) == GLFW_RELEASE)
+		{
 			m_wasMousePressed = false;
-			//std::cout << "Mouse Unpressed" << std::endl;
 		}
 	}
 	else{
@@ -101,9 +106,6 @@ void CameraController::update(float deltaTime)
 	if(camera)
 	{
 		camera->Translate(offset);
-		offset << 0,0,0;
-		front << 0,0,-1;
-		up << 0,1,0;
 	}
 	else{
 		printf("Error: no camera\n");
