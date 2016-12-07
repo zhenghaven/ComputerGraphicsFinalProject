@@ -239,9 +239,129 @@ bool ConstructWorld(Model ** worldPtr)
 	Model * GrassTile1 = new Model("models/Grass/", "grass.obj");
 	GrassTile1->SetShaderProgram(shader);
 	Grass1->AddChild(GrassTile1);
-	Grass1->SetScale(10.0);
-	Grass1->Translate(Eigen::Vector3f(0.0f,0.0f,1.0f));
+	Grass1->SetScale(2.0);
+	Grass1->Translate(Eigen::Vector3f(-2.0f,-1.1f,3.0f));
 	(*worldPtr)->AddChild(Grass1);
+
+	ModelInstance * Grass2 = new ModelInstance();
+	Model * GrassTile2 = new Model("models/Grass/", "grass.obj");
+	GrassTile2->SetShaderProgram(shader);
+	Grass2->AddChild(GrassTile2);
+	Grass2->SetScale(2.0);
+	Grass2->Translate(Eigen::Vector3f(2.0f,-1.1f,3.0f));
+	(*worldPtr)->AddChild(Grass2);
+
+	ModelInstance * Grass3 = new ModelInstance();
+	Model * GrassTile3 = new Model("models/Grass/", "grass.obj");
+	GrassTile3->SetShaderProgram(shader);
+	Grass3->AddChild(GrassTile3);
+	Grass3->SetScale(2.0);
+	Grass3->Translate(Eigen::Vector3f(6.0f,-1.1f,3.0f));
+	(*worldPtr)->AddChild(Grass3);
+
+	ModelInstance * Grass4 = new ModelInstance();
+	Model * GrassTile4 = new Model("models/Grass/", "grass.obj");
+	GrassTile4->SetShaderProgram(shader);
+	Grass4->AddChild(GrassTile4);
+	Grass4->SetScale(2.0);
+	Grass4->Translate(Eigen::Vector3f(10.0f,-1.1f,3.0f));
+	(*worldPtr)->AddChild(Grass4);
+
+	ModelInstance * Grass5 = new ModelInstance();
+	Model * GrassTile5 = new Model("models/Grass/", "grass.obj");
+	GrassTile5->SetShaderProgram(shader);
+	Grass5->AddChild(GrassTile5);
+	Grass5->SetScale(2.0);
+	Grass5->Translate(Eigen::Vector3f(-2.0f,-1.1f,7.0f));
+	(*worldPtr)->AddChild(Grass5);
+
+	ModelInstance * Grass6 = new ModelInstance();
+	Model * GrassTile6 = new Model("models/Grass/", "grass.obj");
+	GrassTile6->SetShaderProgram(shader);
+	Grass6->AddChild(GrassTile6);
+	Grass6->SetScale(2.0);
+	Grass6->Translate(Eigen::Vector3f(2.0f,-1.1f,7.0f));
+	(*worldPtr)->AddChild(Grass6);
+
+	ModelInstance * Grass7 = new ModelInstance();
+	Model * GrassTile7 = new Model("models/Grass/", "grass.obj");
+	GrassTile7->SetShaderProgram(shader);
+	Grass7->AddChild(GrassTile7);
+	Grass7->SetScale(2.0);
+	Grass7->Translate(Eigen::Vector3f(6.0f,-1.1f,7.0f));
+	(*worldPtr)->AddChild(Grass7);
+
+	ModelInstance * Grass8 = new ModelInstance();
+	Model * GrassTile8 = new Model("models/Grass/", "grass.obj");
+	GrassTile8->SetShaderProgram(shader);
+	Grass8->AddChild(GrassTile8);
+	Grass8->SetScale(2.0);
+	Grass8->Translate(Eigen::Vector3f(10.0f,-1.1f,7.0f));
+	(*worldPtr)->AddChild(Grass8);
+
+	ModelInstance * Grass9 = new ModelInstance();
+	Model * GrassTile9 = new Model("models/Grass/", "grass.obj");
+	GrassTile9->SetShaderProgram(shader);
+	Grass9->AddChild(GrassTile9);
+	Grass9->SetScale(2.0);
+	Grass9->Translate(Eigen::Vector3f(-2.0f,-1.1f,11.0f));
+	(*worldPtr)->AddChild(Grass9);
+
+	ModelInstance * Grass10 = new ModelInstance();
+	Model * GrassTile10 = new Model("models/Grass/", "grass.obj");
+	GrassTile10->SetShaderProgram(shader);
+	Grass10->AddChild(GrassTile10);
+	Grass10->SetScale(2.0);
+	Grass10->Translate(Eigen::Vector3f(2.0f,-1.1f,11.0f));
+	(*worldPtr)->AddChild(Grass10);
+
+	ModelInstance * Grass11 = new ModelInstance();
+	Model * GrassTile11 = new Model("models/Grass/", "grass.obj");
+	GrassTile11->SetShaderProgram(shader);
+	Grass11->AddChild(GrassTile11);
+	Grass11->SetScale(2.0);
+	Grass11->Translate(Eigen::Vector3f(6.0f,-1.1f,11.0f));
+	(*worldPtr)->AddChild(Grass11);
+
+	ModelInstance * Grass12 = new ModelInstance();
+	Model * GrassTile12 = new Model("models/Grass/", "grass.obj");
+	GrassTile12->SetShaderProgram(shader);
+	Grass12->AddChild(GrassTile12);
+	Grass12->SetScale(2.0);
+	Grass12->Translate(Eigen::Vector3f(10.0f,-1.1f,11.0f));
+	(*worldPtr)->AddChild(Grass12);
+
+	ModelInstance * Grass13 = new ModelInstance();
+	Model * GrassTile13 = new Model("models/Grass/", "grass.obj");
+	GrassTile13->SetShaderProgram(shader);
+	Grass13->AddChild(GrassTile13);
+	Grass13->SetScale(2.0);
+	Grass13->Translate(Eigen::Vector3f(-2.0f,-1.1f,15.0f));
+	(*worldPtr)->AddChild(Grass13);
+
+	ModelInstance * Grass14 = new ModelInstance();
+	Model * GrassTile14 = new Model("models/Grass/", "grass.obj");
+	GrassTile14->SetShaderProgram(shader);
+	Grass14->AddChild(GrassTile14);
+	Grass14->SetScale(2.0);
+	Grass14->Translate(Eigen::Vector3f(2.0f,-1.1f,15.0f));
+	(*worldPtr)->AddChild(Grass14);
+
+	ModelInstance * Grass15 = new ModelInstance();
+	Model * GrassTile15 = new Model("models/Grass/", "grass.obj");
+	GrassTile15->SetShaderProgram(shader);
+	Grass15->AddChild(GrassTile15);
+	Grass15->SetScale(2.0);
+	Grass15->Translate(Eigen::Vector3f(6.0f,-1.1f,15.0f));
+	(*worldPtr)->AddChild(Grass15);
+
+	ModelInstance * Grass16 = new ModelInstance();
+	Model * GrassTile16 = new Model("models/Grass/", "grass.obj");
+	GrassTile16->SetShaderProgram(shader);
+	Grass16->AddChild(GrassTile16);
+	Grass16->SetScale(2.0);
+	Grass16->Translate(Eigen::Vector3f(10.0f,-1.1f,15.0f));
+	(*worldPtr)->AddChild(Grass16);
 
 
 	//Planets
