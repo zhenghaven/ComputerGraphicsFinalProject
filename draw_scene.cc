@@ -128,20 +128,6 @@ bool ConstructWorld(Model ** worldPtr)
 	*worldPtr = new Model();
 
 
-
-//Initialize models
-
-	//Sky box
-
-	//Planets
-
-	Model * alderaan = new  Model("models/Alderaan/", "Alderaan.obj");
-	alderaan->SetShaderProgram(shader);
-	alderaan->SetScale(0.01);
-	alderaan->Translate(Eigen::Vector3f(0.0f,0.0f,0.0f));
-	(*worldPtr)->AddChild(alderaan);
-
-
 	return true;
 }
 
@@ -197,7 +183,7 @@ int main(int argc, char** argv)
 
 	Camera* camera = new Camera(projection);
 	CameraController* cameraController = new CameraController(window, camera);
-
+	camera->Translate(Eigen::Vector3f(-5.0f, 0.0f, -15.0f));
 
 	Model * world = nullptr;
 

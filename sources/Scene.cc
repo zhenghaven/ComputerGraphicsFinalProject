@@ -11,7 +11,14 @@
 #include "ShaderProgram.h"
 
 Scene::Scene(ModelBase * world) : 
-	m_world(world)
+	m_world(world),
+	m_skyBox(nullptr),
+	m_alderaan(nullptr),
+	m_mileStone(nullptr),
+	m_mileStoneProxy(nullptr),
+	m_mileStoneDirection(1),
+	m_mileMinX(1.0f),
+	m_mileMaxX(10.0f)
 {
 	std::string tmpStr1, tmpStr2;
 	ShaderProgram::ReadShaderStrFromFile("shaders/vertex_shader.glsl", tmpStr1);
@@ -121,6 +128,23 @@ Scene::Scene(ModelBase * world) :
 	m_skyBox->SetScale(1000);
 	
 	world->AddChild(m_skyBox);
+	
+	
+	m_alderaan = new  Model("models/Alderaan/", "Alderaan.obj");
+	m_alderaan->SetShaderProgram(shader);
+	m_alderaan->SetScale(0.05);
+	m_alderaan->Translate(Eigen::Vector3f(2.0f, 4.0f, 0.0f));
+	world->AddChild(m_alderaan);
+	
+	m_mileStone = new Model("models/milestone/", "milestone_01_Low_20k_tris_.obj");
+	m_mileStone->SetShaderProgram(shader);
+	
+	m_mileStoneProxy = new ModelBase();
+	m_mileStoneProxy->SetScale(2.0f);
+	m_mileStoneProxy->AddChild("m_mileStone", m_mileStone);
+	m_mileStonePosX = 7.0f;
+	m_mileStoneProxy->Translate(Eigen::Vector3f(m_mileStonePosX, 0.0f, 0.0f));
+	world->AddChild(m_mileStoneProxy);
 }
 
 Scene::Scene() : 
@@ -139,4 +163,21 @@ void Scene::Update(float deltaTime)
 	//Update position here.
 	//The world and its children will be draw in the main loop.
 	m_skyBox->Rotate(deltaTime * 0.5f, 0.0f, 0.0f);
+	m_mileStone->Rotate(deltaTime * 25.0f, 0.0f, deltaTime * 23.0f);
+	m_alderaan->Rotate(deltaTime * 25.0f, 0.0f, 0.0f);
+	
+	float mileStoneSpeed = 1.0f;
+	if(m_mileStonePosX > m_mileMaxX)
+	{
+		m_mileStoneDirection = -1;
+	}
+	else if(m_mileStonePosX < m_mileMinX)
+	{
+		m_mileStoneDirection = 1;
+	}
+	m_mileStoneProxy->Translate(Eigen::Vector3f(deltaTime * m_mileStoneDirection * mileStoneSpeed, 0.0f, 0.0f));
+	m_mileStonePosX += (deltaTime * m_mileStoneDirection * mileStoneSpeed);
 }
+
+
+

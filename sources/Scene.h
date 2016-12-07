@@ -3,6 +3,8 @@
 #ifndef SCENE_HEADER
 #define SCENE_HEADER
 
+#include <Eigen/Core>
+
 class Camera;
 class ModelBase;
 class Model;
@@ -23,6 +25,15 @@ private:
 	
 	Model * m_skyBox;
 	
+	Model * m_alderaan;
+	
+	Model * m_mileStone;
+	ModelBase * m_mileStoneProxy;
+	
+	int m_mileStoneDirection;
+	float m_mileMinX;
+	float m_mileMaxX;
+	float m_mileStonePosX;
 };
 
 
