@@ -172,7 +172,7 @@ void Model::Draw(const Camera * camera)
 	if(m_shader && m_material && camera)
 	{
 		m_shader->Use();
-		m_shader->SetUniformIfExistMatrix4fv("view", camera->GetAbsolutePose().data());
+		m_shader->SetUniformIfExistMatrix4fv("view", camera->GetLocalPose().data());
 		m_shader->SetUniformIfExistMatrix4fv("projection", camera->GetProjection().data());
 		m_shader->SetUniformIfExistMatrix4fv("model", GetAbsolutePose().data());
 
