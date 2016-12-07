@@ -24,25 +24,25 @@ ModelInstance::ModelInstance() :
 ModelInstance::ModelInstance(const Eigen::MatrixXf& vertices) :
 	m_actualModel(new Model(vertices))
 {
-	
+
 }
 
 ModelInstance::ModelInstance(const Eigen::MatrixXf& vertices, const std::vector<GLuint>& indices) :
 	m_actualModel(new Model(vertices, indices))
 {
-	
+
 }
 
 ModelInstance::ModelInstance(const std::string &parentPath, const std::string &OBJfileName) :
 	m_actualModel(new Model(parentPath, OBJfileName))
 {
-	
+
 }
 
 ModelInstance::ModelInstance(const ModelInstance & other) :
 	m_actualModel(other.GetRealModel())
 {
-	
+
 }
 
 ModelInstance::~ModelInstance()
@@ -56,12 +56,12 @@ ModelInstance::~ModelInstance()
 	}
 	m_children.clear();
 }
-	
+
 std::shared_ptr<Model> ModelInstance::GetRealModel() const
 {
 	return m_actualModel;
 }
-	
+
 ModelInstance * ModelInstance::CreateNewInstance() const
 {
 	return new ModelInstance(*this);
@@ -74,7 +74,7 @@ void ModelInstance::Draw(const Camera * camera)
 		m_actualModel->SetLocalPose(GetAbsolutePose());
 		m_actualModel->Draw(camera);
 	}
-	
+
 	for (auto it = m_children.begin(); it != m_children.end(); ++it)
 	{
 		if(it->second)
@@ -83,4 +83,3 @@ void ModelInstance::Draw(const Camera * camera)
 		}
 	}
 }
-

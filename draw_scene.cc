@@ -127,33 +127,120 @@ bool ConstructWorld(Model ** worldPtr)
 
 	*worldPtr = new Model();
 
-	ModelInstance * sky = new ModelInstance();
 
+
+//Initialize models
+
+	//Sky box
 	Model * skyBox = new  Model("models/Sky/", "skybox.obj");
 	skyBox->SetShaderProgram(shader);
-	sky->GetRealModel()->AddChild("skyBox", skyBox);
-	skyBox->SetScale(1000.0);
-	skyBox->Translate(Eigen::Vector3f(0.0f,0.0f,0.0f));
+	skyBox->SetScale(1000);
 
-	ModelInstance * FlatWall = new ModelInstance();
+	//Walls
+	ModelInstance * BackWall1 = new ModelInstance();
+	Model * BrickWall1 = new Model("models/brick_wall_flat/", "wall.obj");
+	BrickWall1->SetShaderProgram(shader);
+	BackWall1->AddChild(BrickWall1);
+	Model * CementWall1 = new Model("models/brick_wall_flat/", "cement.obj");
+	CementWall1->SetShaderProgram(shader);
+	BackWall1->AddChild(CementWall1);
+	BackWall1->SetScale(0.01);
+	BackWall1->Rotate(90.0f,0.0f,0.0f);
+	BackWall1->Translate(Eigen::Vector3f(0.0f,0.0f,1.0f));
+	(*worldPtr)->AddChild(BackWall1);
 
-	Model * FlatWallWall = new Model("models/brick_wall_flat/", "wall.obj");
-	FlatWallWall->SetShaderProgram(shader);
-	Model * FlatWallCement = new Model("models/brick_wall_flat/", "cement.obj");
-	FlatWallCement->SetShaderProgram(shader);
-	FlatWall->GetRealModel()->AddChild("FlatWallWall", FlatWallWall);
-	FlatWall->GetRealModel()->AddChild("FlatWallCement", FlatWallCement);
+	ModelInstance * BackWall2 = new ModelInstance();
+	Model * BrickWall2 = new Model("models/brick_wall_flat/", "wall.obj");
+	BrickWall2->SetShaderProgram(shader);
+	BackWall2->AddChild(BrickWall2);
+	Model * CementWall2 = new Model("models/brick_wall_flat/", "cement.obj");
+	CementWall2->SetShaderProgram(shader);
+	BackWall2->AddChild(CementWall2);
+	BackWall2->SetScale(0.01);
+	BackWall2->Rotate(90.0f,0.0f,0.0f);
+	BackWall2->Translate(Eigen::Vector3f(6.0f,0.0f,1.0f));
+	(*worldPtr)->AddChild(BackWall2);
 
-	ModelInstance * FlatWall2 = FlatWall->CreateNewInstance();
-	FlatWall->SetScale(0.01);
-	FlatWall->Rotate(90.0f, 0.0f, 0.0f);
-	FlatWall->Translate(Eigen::Vector3f(0.0f, 3.0f, 0.0f));
-	FlatWall2->SetScale(0.01);
-	FlatWall2->Translate(Eigen::Vector3f(0.0f, -3.0f, 0.0f));
+	ModelInstance * BackWall3 = new ModelInstance();
+	Model * BrickWall3 = new Model("models/brick_wall_flat/", "wall.obj");
+	BrickWall3->SetShaderProgram(shader);
+	BackWall3->AddChild(BrickWall3);
+	Model * CementWall3 = new Model("models/brick_wall_flat/", "cement.obj");
+	CementWall3->SetShaderProgram(shader);
+	BackWall3->AddChild(CementWall3);
+	BackWall3->SetScale(0.01);
+	BackWall3->Rotate(0.0f,0.0f,0.0f);
+	BackWall3->Translate(Eigen::Vector3f(10.0f,0.0f,5.0f));
+	(*worldPtr)->AddChild(BackWall3);
 
-	(*worldPtr)->AddChild(sky);
-	(*worldPtr)->AddChild(FlatWall);
-	(*worldPtr)->AddChild(FlatWall2);
+	ModelInstance * BackWall4 = new ModelInstance();
+	Model * BrickWall4 = new Model("models/brick_wall_flat/", "wall.obj");
+	BrickWall4->SetShaderProgram(shader);
+	BackWall4->AddChild(BrickWall4);
+	Model * CementWall4 = new Model("models/brick_wall_flat/", "cement.obj");
+	CementWall4->SetShaderProgram(shader);
+	BackWall4->AddChild(CementWall4);
+	BackWall4->SetScale(0.01);
+	BackWall4->Rotate(0.0f,0.0f,0.0f);
+	BackWall4->Translate(Eigen::Vector3f(10.0f,0.0f,13.0f));
+	(*worldPtr)->AddChild(BackWall4);
+
+	ModelInstance * BackWall5 = new ModelInstance();
+	Model * BrickWall5 = new Model("models/brick_wall_flat/", "wall.obj");
+	BrickWall5->SetShaderProgram(shader);
+	BackWall5->AddChild(BrickWall5);
+	Model * CementWall5 = new Model("models/brick_wall_flat/", "cement.obj");
+	CementWall5->SetShaderProgram(shader);
+	BackWall5->AddChild(CementWall5);
+	BackWall5->SetScale(0.01);
+	BackWall5->Rotate(90.0f,0.0f,0.0f);
+	BackWall5->Translate(Eigen::Vector3f(0.0f,0.0f,17.0f));
+	(*worldPtr)->AddChild(BackWall5);
+
+	ModelInstance * BackWall6 = new ModelInstance();
+	Model * BrickWall6 = new Model("models/brick_wall_flat/", "wall.obj");
+	BrickWall6->SetShaderProgram(shader);
+	BackWall6->AddChild(BrickWall6);
+	Model * CementWall6 = new Model("models/brick_wall_flat/", "cement.obj");
+	CementWall6->SetShaderProgram(shader);
+	BackWall6->AddChild(CementWall6);
+	BackWall6->SetScale(0.01);
+	BackWall6->Rotate(90.0f,0.0f,0.0f);
+	BackWall6->Translate(Eigen::Vector3f(6.0f,0.0f,17.0f));
+	(*worldPtr)->AddChild(BackWall6);
+
+	ModelInstance * BackWall7 = new ModelInstance();
+	Model * BrickWall7 = new Model("models/brick_wall_flat/", "wall.obj");
+	BrickWall7->SetShaderProgram(shader);
+	BackWall7->AddChild(BrickWall7);
+	Model * CementWall7 = new Model("models/brick_wall_flat/", "cement.obj");
+	CementWall7->SetShaderProgram(shader);
+	BackWall7->AddChild(CementWall7);
+	BackWall7->SetScale(0.01);
+	BackWall7->Rotate(0.0f,0.0f,0.0f);
+	BackWall7->Translate(Eigen::Vector3f(-4.0f,0.0f,5.0f));
+	(*worldPtr)->AddChild(BackWall7);
+
+	ModelInstance * BackWall8 = new ModelInstance();
+	Model * BrickWall8 = new Model("models/brick_wall_flat/", "wall.obj");
+	BrickWall8->SetShaderProgram(shader);
+	BackWall8->AddChild(BrickWall8);
+	Model * CementWall8 = new Model("models/brick_wall_flat/", "cement.obj");
+	CementWall8->SetShaderProgram(shader);
+	BackWall8->AddChild(CementWall8);
+	BackWall8->SetScale(0.01);
+	BackWall8->Rotate(0.0f,0.0f,0.0f);
+	BackWall8->Translate(Eigen::Vector3f(-4.0f,0.0f,13.0f));
+	(*worldPtr)->AddChild(BackWall8);
+
+	//Planets
+
+//Instance Models
+
+	//Courtyard
+
+	//(*worldPtr)->AddChild(skyBox);
+
 	return true;
 }
 
@@ -221,7 +308,7 @@ int main(int argc, char** argv)
 		glfwTerminate();
 		return -1;
 	}
-	
+
 	Scene scene(world);
 
 	//world->SetScale(0.01);
@@ -232,10 +319,10 @@ int main(int argc, char** argv)
 
 
 	double lastFrame = 0;
-	
+
 	while (!glfwWindowShouldClose(window))
 	{
-		
+
 		ClearTheFrameBuffer();
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -243,7 +330,7 @@ int main(int argc, char** argv)
 		double currentFrame = glfwGetTime();
 		float deltaTime = static_cast<float>(currentFrame - lastFrame);
 		lastFrame = currentFrame;
-		
+
 		scene.Update(deltaTime);
 
 		cameraController->update(deltaTime);
