@@ -242,7 +242,6 @@ bool ConstructWorld(Model ** worldPtr)
 	Grass1->SetScale(2.0);
 	Grass1->Translate(Eigen::Vector3f(-2.0f,-1.1f,3.0f));
 	(*worldPtr)->AddChild(Grass1);
-*/
 
 	ModelInstance * Grass2 = new ModelInstance();
 	Model * GrassTile2 = new Model("models/Grass/", "grass.obj");
@@ -364,6 +363,7 @@ bool ConstructWorld(Model ** worldPtr)
 	Grass16->Translate(Eigen::Vector3f(10.0f,-1.1f,15.0f));
 	(*worldPtr)->AddChild(Grass16);
 
+*/
 
 	//Planets
 

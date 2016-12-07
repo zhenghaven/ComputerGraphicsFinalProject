@@ -65,6 +65,55 @@ Scene::Scene(ModelBase * world) :
 	world->AddChild(BrickWall90_3);
 	world->AddChild(BrickWall90_4);
 
+	
+	ModelInstance * Grass_1 = new ModelInstance();
+	
+	Model * GrassTile1 = new Model("models/Grass/", "grass.obj");
+	GrassTile1->SetShaderProgram(shader);
+	Grass_1->GetRealModel()->AddChild("GrassTile1", GrassTile1); 
+	Grass_1->SetScale(3.0);
+	Grass_1->Translate(Eigen::Vector3f(-1.5f, -1.5f, -1.5f));
+	
+	ModelInstance * Grass_2 = Grass_1->CreateNewInstance();
+	Grass_2->SetScale(3.0);
+	Grass_2->Translate(Eigen::Vector3f(-1.5f, -1.5f, 4.5f));
+	
+	ModelInstance * Grass_3 = Grass_1->CreateNewInstance();
+	Grass_3->SetScale(3.0);
+	Grass_3->Translate(Eigen::Vector3f(-1.5f, -1.5f, 9.5f));
+	
+	ModelInstance * Grass_4 = Grass_1->CreateNewInstance();
+	Grass_4->SetScale(3.0);
+	Grass_4->Translate(Eigen::Vector3f(-1.5f, -1.5f, 14.5f));
+	
+	ModelInstance * Grass_5 = Grass_1->CreateNewInstance();
+	Grass_5->SetScale(3.0);
+	Grass_5->Translate(Eigen::Vector3f(-1.5f, -1.5f, 19.5f));
+	
+	ModelInstance * Grass_row_1 = new ModelInstance();
+	Grass_row_1->GetRealModel()->AddChild("Grass_1", Grass_1); 
+	Grass_row_1->GetRealModel()->AddChild("Grass_2", Grass_2); 
+	Grass_row_1->GetRealModel()->AddChild("Grass_3", Grass_3); 
+	Grass_row_1->GetRealModel()->AddChild("Grass_4", Grass_4); 
+	Grass_row_1->GetRealModel()->AddChild("Grass_5", Grass_5); 
+	
+	ModelInstance * Grass_row_2 = Grass_row_1->CreateNewInstance();
+	Grass_row_2->Translate(Eigen::Vector3f(5.0f, 0.0f, 0.0f));
+	
+	ModelInstance * Grass_row_3 = Grass_row_1->CreateNewInstance();
+	Grass_row_3->Translate(Eigen::Vector3f(10.0f, 0.0f, 0.0f));
+	
+	ModelInstance * Grass_row_4 = Grass_row_1->CreateNewInstance();
+	Grass_row_4->Translate(Eigen::Vector3f(15.0f, 0.0f, 0.0f));
+	
+	ModelInstance * Grass_row_5 = Grass_row_1->CreateNewInstance();
+	Grass_row_5->Translate(Eigen::Vector3f(20.0f, 0.0f, 0.0f));
+	
+	world->AddChild(Grass_row_1);
+	world->AddChild(Grass_row_2);
+	world->AddChild(Grass_row_3);
+	world->AddChild(Grass_row_4);
+	world->AddChild(Grass_row_5);
 }
 
 Scene::Scene() : 
