@@ -183,7 +183,7 @@ int main(int argc, char** argv)
 
 	Camera* camera = new Camera(projection);
 	CameraController* cameraController = new CameraController(window, camera);
-	camera->Translate(Eigen::Vector3f(-5.0f, 0.0f, -15.0f));
+	camera->Translate(Eigen::Vector3f(-5.0f, -4.5f, -22.0f));
 
 	Model * world = nullptr;
 

@@ -140,7 +140,7 @@ Scene::Scene(ModelBase * world) :
 	m_textDisplay->SetShaderProgram(shader);
 	m_textDisplay->SetScale(2.0);
 	m_textDisplay->Rotate(0.0f,90.0f,0.0f);
-	m_textDisplay->Translate(Eigen::Vector3f(0.0f, 3.0f, 0.0f));
+	m_textDisplay->Translate(Eigen::Vector3f(0.0f, 5.0f, -10.0f));
 	world->AddChild(m_textDisplay);
 
 	m_mileStone = new Model("models/milestone/", "milestone_01_Low_20k_tris_.obj");
