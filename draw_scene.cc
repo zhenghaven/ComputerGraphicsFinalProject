@@ -222,7 +222,15 @@ int main(int argc, char** argv)
 		// Poll for and process events.
 		glfwPollEvents();
 	}
-
+	if(camera)
+		delete camera;
+	
+	if(cameraController)
+		delete cameraController;
+	
+	if(world)
+		delete world;
+	
 	// Destroy window.
 	glfwDestroyWindow(window);
 	// Tear down GLFW library.
